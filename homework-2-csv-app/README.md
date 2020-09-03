@@ -7,7 +7,7 @@
 
 * Сборка приложения в jar файл: `mvn clean package`
 
-* В директории target выполнить комманду : `java -jar homework-1-csv-app-1.0-SNAPSHOT.jar`
+* В директории target выполнить комманду : `java -jar homework-2-csv-app-1.0-SNAPSHOT.jar`
 
 #### Описание задания
 Приложение по проведению тестирования студентов (с самим тестированием)

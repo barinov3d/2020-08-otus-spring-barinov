@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
-public class Line {
-    private final String question;
-    private final List<Answer> answers;
+public class Answer {
+    private final Character answerOptionLetter;
+    private final String text;
+    private final boolean isCorrectAnswer;
 }

@@ -11,9 +11,8 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:application.properties")
 public class Demo {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Demo.class);
-        //final CsvReader csvReader = context.getBean(CsvReader.class);
         final ExamPrinter examPrinter = context.getBean(ExamPrinter.class);
         examPrinter.print();
     }
