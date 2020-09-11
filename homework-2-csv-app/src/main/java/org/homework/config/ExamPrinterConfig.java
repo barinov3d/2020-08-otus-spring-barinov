@@ -1,9 +1,8 @@
 package org.homework.config;
 
-import org.homework.utils.CsvReader;
-import org.homework.utils.ExamPrinter;
-import org.homework.utils.ExamPrinterImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.homework.utils.reader.CsvReader;
+import org.homework.utils.printer.ExamPrinter;
+import org.homework.utils.printer.ExamPrinterImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ExamPrinterConfig {
 
-    @Autowired
     private final CsvReader csvReader;
     private final Integer passBorder;
 
@@ -22,6 +20,6 @@ public class ExamPrinterConfig {
 
     @Bean
     public ExamPrinter examPrinter() throws Exception {
-        return new ExamPrinterImpl(csvReader.getAsExam(), passBorder);
+        return new ExamPrinterImpl(csvReader.getAsExam(passBorder));
     }
 }
