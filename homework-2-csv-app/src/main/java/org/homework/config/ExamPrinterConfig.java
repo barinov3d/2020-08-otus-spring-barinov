@@ -1,11 +1,14 @@
 package org.homework.config;
 
-import org.homework.utils.reader.CsvReader;
+import org.homework.utils.ExamPrinterImpl;
 import org.homework.utils.printer.ExamPrinter;
-import org.homework.utils.printer.ExamPrinterImpl;
+import org.homework.utils.reader.CsvReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 @Configuration
 public class ExamPrinterConfig {
@@ -20,6 +23,6 @@ public class ExamPrinterConfig {
 
     @Bean
     public ExamPrinter examPrinter() throws Exception {
-        return new ExamPrinterImpl(csvReader.getAsExam(passBorder));
+        return new ExamPrinterImpl(csvReader.getAsExam(passBorder), new BufferedReader(new InputStreamReader(System.in)), System.out);
     }
 }
