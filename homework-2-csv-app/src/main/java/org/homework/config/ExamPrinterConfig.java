@@ -17,6 +17,7 @@ public class ExamPrinterConfig {
     private final Integer passBorder;
 
     public ExamPrinterConfig(CsvReader csvReader, @Value("${passBorder}") Integer passBorder) {
+        checkBorderValue(passBorder);
         this.csvReader = csvReader;
         this.passBorder = passBorder;
     }
@@ -24,5 +25,11 @@ public class ExamPrinterConfig {
     @Bean
     public ExamPrinter examPrinter() throws Exception {
         return new ExamPrinterImpl(csvReader.getAsExam(passBorder), new BufferedReader(new InputStreamReader(System.in)), System.out);
+    }
+
+    private void checkBorderValue(Integer passBorder) {
+        if (!((passBorder >= 0) && (passBorder <= 100))) {
+            throw new RuntimeException("Incorrect border value. Value should be: 0 >= value <= 100");
+        }
     }
 }

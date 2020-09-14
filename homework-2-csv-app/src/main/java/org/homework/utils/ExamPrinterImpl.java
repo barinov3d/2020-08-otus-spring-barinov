@@ -5,6 +5,8 @@ import org.homework.model.Answer;
 import org.homework.model.Exam;
 import org.homework.model.Line;
 import org.homework.utils.printer.ExamPrinter;
+import org.homework.utils.printer.IncorrectBorderValueException;
+import org.homework.utils.printer.NotFinishedExamException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,15 +18,21 @@ public class ExamPrinterImpl implements ExamPrinter {
 
     private final Exam exam;
     private final int passBorder;
+
     private final BufferedReader in;
+
     private final PrintStream out;
     private int correctAnswerCounter;
+    private boolean examResult;
+    private boolean isExamFinished;
 
     public ExamPrinterImpl(Exam exam, BufferedReader in, PrintStream out) {
         this.exam = exam;
         this.in = in;
         this.out = out;
-        this.passBorder = exam.getPassBorder();
+        final int passBorder = exam.getPassBorder();
+        checkBorderValue(passBorder);
+        this.passBorder = passBorder;
     }
 
     @SneakyThrows
@@ -42,7 +50,8 @@ public class ExamPrinterImpl implements ExamPrinter {
         out.println("Hello, " + firstName + " " + lastName);
         exam.getLines().forEach(this::accept);
         final int userResult = getPercentageOfCompletion();
-        final boolean isExamPassed = getResult(userResult);
+        isExamFinished = true;
+        setExamResult(userResult);
         printExamResult(firstName, lastName, userResult);
     }
 
@@ -58,7 +67,8 @@ public class ExamPrinterImpl implements ExamPrinter {
     private void printExamResult(String firstName, String lastName, int userResult) {
         out.println(firstName.toUpperCase() + " " + lastName.toUpperCase() +
                 ", YOUR EXAM RESULT : " + userResult + "%");
-        if (getResult(userResult)) {
+        out.println("Minimum pass border: ".toUpperCase() + passBorder + "%");
+        if (getExamResult()) {
             out.println("Congratulation! You pass the exam".toUpperCase());
         } else {
             out.println("You failed the exam. Try again later...".toUpperCase());
@@ -66,8 +76,16 @@ public class ExamPrinterImpl implements ExamPrinter {
     }
 
     @Override
-    public boolean getResult(int userResult) {
-        return userResult >= passBorder;
+    public boolean getExamResult() {
+        if (!isExamFinished) {
+            throw new NotFinishedExamException("Not possible to show result of exam. Exam is not finished");
+        } else {
+            return examResult;
+        }
+    }
+
+    private void setExamResult(int userResult) {
+        examResult = userResult >= passBorder;
     }
 
     private int getPercentageOfCompletion() {
@@ -102,5 +120,11 @@ public class ExamPrinterImpl implements ExamPrinter {
                     "Correct answer should be mark with '+' at the end");
         }
         proceedUserAnswerLetter(first.get().getAnswerOptionLetter());
+    }
+
+    private void checkBorderValue(Integer passBorder) {
+        if (!((passBorder >= 0) && (passBorder <= 100))) {
+            throw new IncorrectBorderValueException("Incorrect border value. Value should be: 0 >= value <= 100");
+        }
     }
 }

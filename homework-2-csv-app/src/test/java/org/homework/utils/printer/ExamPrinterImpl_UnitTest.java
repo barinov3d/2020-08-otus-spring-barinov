@@ -17,9 +17,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -30,63 +30,97 @@ class ExamPrinterImpl_UnitTest {
 
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     private final PrintStream writer = System.out;
+    private final char firstCorrectLetter = 'D';
+    private final char secondCorrectLetter = 'B';
+    private final char thirdCorrectLetter = 'A';
+    BufferedReader bufferedReader = org.mockito.Mockito.mock(BufferedReader.class);
     @Mock
     private Exam exam;
-
     private ExamPrinter examPrinterImpl;
 
     @SneakyThrows
     @Test
     @Order(1)
-    void should_always_pass() {
-        when(exam.getPassBorder()).thenReturn(0);
+    void should_pass_zero_border() {
         examPrinterImpl = new ExamPrinterImpl(exam, reader, writer);
-        assertTrue(examPrinterImpl.getResult(100));
+        fullExam("First name", "Last name", "Z", "Z", "Z", 0);
+        assertTrue(examPrinterImpl.getExamResult());
     }
 
     @Test
     @Order(2)
-    void should_always_false() {
-        when(exam.getPassBorder()).thenReturn(100);
+    void should_failed_less_than__max_possible_pass_border() throws IOException {
         examPrinterImpl = new ExamPrinterImpl(exam, reader, writer);
-        assertFalse(examPrinterImpl.getResult(99));
+        fullExam("First name", "Last name", "D", "B", "Z", 100);
+        assertFalse(examPrinterImpl.getExamResult());
     }
 
     @Test
     @Order(3)
-    void should_pass() {
-        when(exam.getPassBorder()).thenReturn(60);
+    void should_pass_equals_pass_border() throws IOException {
         examPrinterImpl = new ExamPrinterImpl(exam, reader, writer);
-        assertTrue(examPrinterImpl.getResult(60));
+        fullExam("First name", "Last name", "D", "B", "Z", 66);
+        assertTrue(examPrinterImpl.getExamResult());
     }
 
     @Test
     @Order(4)
-    void should_failed() {
-        when(exam.getPassBorder()).thenReturn(60);
+    void should_failed_less_than_pass_border() throws IOException {
         examPrinterImpl = new ExamPrinterImpl(exam, reader, writer);
-        assertFalse(examPrinterImpl.getResult(59));
+        fullExam("First name", "Last name", "D", "Z", "Z", 66);
+        assertFalse(examPrinterImpl.getExamResult());
     }
 
     @Test
     @Order(5)
-    void test() throws IOException {
-        BufferedReader bufferedReader = org.mockito.Mockito.mock(BufferedReader.class);
-        when(exam.getPassBorder()).thenReturn(100);
+    void incorrect_pass_border_negative_value() {
+        when(exam.getPassBorder()).thenReturn(-50);
+        assertThrows(IncorrectBorderValueException.class, () -> new ExamPrinterImpl(exam, bufferedReader, writer));
+    }
+
+    @Test
+    @Order(6)
+    void incorrect_pass_border_more_than_one_hundred() {
+        when(exam.getPassBorder()).thenReturn(101);
+        assertThrows(IncorrectBorderValueException.class, () -> examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer));
+    }
+
+    @Test
+    @Order(7)
+    void try_get_result_before_exam_finished() {
+        examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer);
+        assertThrows(NotFinishedExamException.class, () -> examPrinterImpl.getExamResult());
+    }
+
+    @Test
+    @Order(8)
+    void happy_path() throws IOException {
+        fullExam("First name", "Last name", "D", "B", "A", 100);
+        assertTrue(examPrinterImpl.getExamResult());
+    }
+
+    @Test
+    @Order(9)
+    void happy_path_negative() throws IOException {
+        fullExam("First name", "Last name", "D", "B", "Z", 100);
+        assertFalse(examPrinterImpl.getExamResult());
+    }
+
+    void fullExam(String firstName, String lastName, String firstAnswerFromUser, String secondAnswerFromUser, String thirdAnswerFromUser, int passBorder) throws IOException {
+        when(exam.getPassBorder()).thenReturn(passBorder);
         when(bufferedReader.readLine())
-                .thenReturn("First name")
-                .thenReturn("Last name")
-                .thenReturn("D")
-                .thenReturn("B")
-                .thenReturn("A");
+                .thenReturn(firstName)
+                .thenReturn(lastName)
+                .thenReturn(firstAnswerFromUser)
+                .thenReturn(secondAnswerFromUser)
+                .thenReturn(thirdAnswerFromUser);
         when(exam.getLines())
                 .thenReturn(Arrays.asList(
-                        new Line("q1", Arrays.asList(new Answer('D', "", true))),
-                        new Line("q2", Arrays.asList(new Answer('B', "", true))),
-                        new Line("q3", Arrays.asList(new Answer('A', "", true)))
+                        new Line("q1", Collections.singletonList(new Answer(firstCorrectLetter, "", true))),
+                        new Line("q2", Collections.singletonList(new Answer(secondCorrectLetter, "", true))),
+                        new Line("q3", Collections.singletonList(new Answer(thirdCorrectLetter, "", true)))
                 ));
         examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer);
         examPrinterImpl.print();
-        assertTrue(examPrinterImpl.getResult(100));
     }
 }
