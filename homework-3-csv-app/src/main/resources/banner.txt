@@ -1,0 +1,5 @@
+o--o o   o   O  o   o       O  o--o  o--o
+|     \ /   / \ |\ /|      / \ |   | |   |
+O-o    O   o---o| O |     o---oO--o  O--o
+|     / \  |   ||   |     |   ||     |
+o--o o   o o   oo   o     o   oo     o
