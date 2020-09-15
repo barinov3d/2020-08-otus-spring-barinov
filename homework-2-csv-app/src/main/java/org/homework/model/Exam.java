@@ -11,4 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 public class Exam {
     private List<Line> lines;
+    private int passBorder;
 }

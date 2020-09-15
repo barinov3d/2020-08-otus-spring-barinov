@@ -1,13 +1,10 @@
-package org.homework.utils;
+package org.homework.utils.reader;
 
 import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
 import org.homework.model.Answer;
 import org.homework.model.Exam;
 import org.homework.model.Line;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -21,16 +18,17 @@ public class CsvReaderImpl implements CsvReader {
     private final CSVReader csvReader;
     private final FileReader fileReader;
 
-    public CsvReaderImpl(File file) throws FileNotFoundException {
-        fileReader = new FileReader(file);
-        csvReader = new CSVReaderBuilder(fileReader).withSkipLines(1).build();
+
+    public CsvReaderImpl(CSVReader csvReader, FileReader fileReader) {
+        this.fileReader = fileReader;
+        this.csvReader = csvReader;
     }
 
     @Override
     /**
      * Converts csv file data to Exam object
      */
-    public Exam getAsExam() throws Exception {
+    public Exam getAsExam(int passBorder) throws Exception {
         final List<List<String>> lists = readAll(fileReader);
         List<Line> lines = new ArrayList<>();
         lists.forEach(list -> {
@@ -38,8 +36,9 @@ public class CsvReaderImpl implements CsvReader {
                     lines.add(new Line(list.get(0), getAsAnswer(tempList)));
                 }
         );
-        return new Exam(lines);
+        return new Exam(lines, passBorder);
     }
+
 
     /**
      * @param reader reader
@@ -60,9 +59,14 @@ public class CsvReaderImpl implements CsvReader {
      */
     private List<Answer> getAsAnswer(List<String> answersLine) {
         final List<Answer> answerList = new ArrayList<>();
+        if (answersLine.size() == 0) {
+            throw new NoAnwersException("No answers found");
+        }
+        answersLine.stream().filter(l -> l.matches("^.*\\+$")).findFirst().orElseThrow(
+                () -> new NoCorrectAnswerException("No correct answer found in line"));
         answersLine.forEach(line -> {
             if (!checkAnswerGlobalStructure(line)) {
-                throw new RuntimeException("Text doesn't matches regex");
+                throw new IncorrectAswerFormatException("Text '" + line + "' doesn't matches regex");
             }
             if (checkAnswerCorrectAnswerStructure(line)) {
                 answerList.add(new Answer(line.charAt(0), line, true));
@@ -70,13 +74,11 @@ public class CsvReaderImpl implements CsvReader {
                 answerList.add(new Answer(line.charAt(0), line, false));
             }
         });
-
         return answerList;
     }
 
     private boolean checkRegex(String text, String regex) {
         final Matcher matcher = Pattern.compile(regex).matcher(text);
-
         return matcher.matches();
     }
 

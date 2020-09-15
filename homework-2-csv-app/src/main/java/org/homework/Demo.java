@@ -1,6 +1,6 @@
 package org.homework;
 
-import org.homework.utils.ExamPrinter;
+import org.homework.utils.printer.ExamPrinter;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
