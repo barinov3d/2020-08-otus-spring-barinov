@@ -8,6 +8,7 @@ import org.homework.model.Line;
 import org.homework.utils.printer.ExamPrinter;
 import org.homework.utils.printer.IncorrectBorderValueException;
 import org.homework.utils.printer.NotFinishedExamException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
 import java.io.BufferedReader;
@@ -23,17 +24,16 @@ public class ExamPrinterImpl implements ExamPrinter {
     private final BufferedReader in;
     private final PrintStream out;
     private final MessageSource messageSource;
-    private final YamlProps props;
+    private final YamlProps props = new YamlProps();
     private int correctAnswerCounter;
     private boolean examResult;
     private boolean isExamFinished;
 
-    public ExamPrinterImpl(Exam exam, BufferedReader in, PrintStream out, MessageSource messageSource, YamlProps props) {
+    public ExamPrinterImpl(Exam exam, BufferedReader in, PrintStream out, MessageSource messageSource) {
         this.exam = exam;
         this.in = in;
         this.out = out;
         this.messageSource = messageSource;
-        this.props = props;
         final int passBorder = exam.getPassBorder();
         checkBorderValue(passBorder);
         this.passBorder = passBorder;
@@ -60,7 +60,7 @@ public class ExamPrinterImpl implements ExamPrinter {
     }
 
     private String readLine() throws IOException {
-        String line = null;
+        String line;
         StringBuilder rslt = new StringBuilder();
         if ((line = in.readLine()) != null) {
             rslt.append(line);

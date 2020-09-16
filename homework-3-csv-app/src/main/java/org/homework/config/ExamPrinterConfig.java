@@ -29,12 +29,7 @@ public class ExamPrinterConfig {
 
     @Bean
     public ExamPrinter examPrinter() throws Exception {
-        return new ExamPrinterImpl(exam(), bufferedReader(), out(), messageSource(), props());
-    }
-
-    @Bean
-    public Exam exam() throws Exception {
-        return csvReader.getAsExam(passBorder);
+        return new ExamPrinterImpl(csvReader.getAsExam(passBorder), bufferedReader(), out(), messageSource());
     }
 
     @Bean
@@ -43,13 +38,8 @@ public class ExamPrinterConfig {
     }
 
     @Bean
-    public InputStream in() {
-        return System.in;
-    }
-
-    @Bean
     public BufferedReader bufferedReader() {
-        return new BufferedReader(new InputStreamReader(in()));
+        return new BufferedReader(new InputStreamReader(System.in));
     }
 
     @Bean
@@ -58,11 +48,6 @@ public class ExamPrinterConfig {
         ms.setBasename("classpath:/i18n/bundle");
         ms.setDefaultEncoding("WINDOWS-1251");
         return ms;
-    }
-
-    @Bean
-    public YamlProps props() {
-        return new YamlProps();
     }
 
     private void checkBorderValue(Integer passBorder) {

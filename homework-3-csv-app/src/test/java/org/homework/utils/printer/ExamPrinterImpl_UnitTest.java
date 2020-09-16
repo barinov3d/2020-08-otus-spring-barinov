@@ -79,20 +79,20 @@ class ExamPrinterImpl_UnitTest {
     @Order(5)
     void incorrect_pass_border_negative_value() {
         when(exam.getPassBorder()).thenReturn(-50);
-        assertThrows(IncorrectBorderValueException.class, () -> new ExamPrinterImpl(exam, bufferedReader, writer, messageSource, props));
+        assertThrows(IncorrectBorderValueException.class, () -> new ExamPrinterImpl(exam, bufferedReader, writer, messageSource));
     }
 
     @Test
     @Order(6)
     void incorrect_pass_border_more_than_one_hundred() {
         when(exam.getPassBorder()).thenReturn(101);
-        assertThrows(IncorrectBorderValueException.class, () -> examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer, messageSource, props));
+        assertThrows(IncorrectBorderValueException.class, () -> examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer, messageSource));
     }
 
     @Test
     @Order(7)
     void try_get_result_before_exam_finished() {
-        examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer, messageSource, props);
+        examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer, messageSource);
         assertThrows(NotFinishedExamException.class, () -> examPrinterImpl.getExamResult());
     }
 
@@ -127,7 +127,7 @@ class ExamPrinterImpl_UnitTest {
                 new Line("q3", Collections.singletonList(new Answer(thirdCorrectLetter, "", true)))
         );
         when(exam.getLines()).thenReturn(lines);
-        examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer, messageSource, props);
+        examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer, messageSource);
         examPrinterImpl.print();
     }
 
