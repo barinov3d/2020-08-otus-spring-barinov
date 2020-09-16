@@ -8,9 +8,7 @@ import org.homework.model.Line;
 import org.homework.utils.printer.ExamPrinter;
 import org.homework.utils.printer.IncorrectBorderValueException;
 import org.homework.utils.printer.NotFinishedExamException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,18 +16,13 @@ import java.io.PrintStream;
 import java.util.List;
 import java.util.Optional;
 
-@Component
 public class ExamPrinterImpl implements ExamPrinter {
 
     private final Exam exam;
     private final int passBorder;
-
     private final BufferedReader in;
-
     private final PrintStream out;
-    @Autowired
     private final MessageSource messageSource;
-    @Autowired
     private final YamlProps props;
     private int correctAnswerCounter;
     private boolean examResult;
