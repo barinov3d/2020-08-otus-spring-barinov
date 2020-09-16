@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.example</groupId>
-    <artifactId>home-work-3-csv-app</artifactId>
+    <artifactId>homework-3-csv-app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>home-work-3-csv-app</name>
-    <description>home-work-3-csv-app</description>
+    <name>homework-3-csv-app</name>
+    <description>homework-3-csv-app</description>
 
     <properties>
         <java.version>11</java.version>
