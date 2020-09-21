@@ -8,7 +8,6 @@ import org.homework.model.Line;
 import org.homework.utils.printer.ExamPrinter;
 import org.homework.utils.printer.IncorrectBorderValueException;
 import org.homework.utils.printer.NotFinishedExamException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
 import java.io.BufferedReader;

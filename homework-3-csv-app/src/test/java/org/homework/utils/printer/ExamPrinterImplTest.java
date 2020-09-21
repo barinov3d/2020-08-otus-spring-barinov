@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class ExamPrinterImpl_UnitTest {
+class ExamPrinterImplTest {
 
     @Autowired
     PrintStream writer;
@@ -56,7 +56,7 @@ class ExamPrinterImpl_UnitTest {
 
     @Test
     @Order(2)
-    void should_failed_less_than__max_possible_pass_border() throws IOException {
+    void should_failed_less_than_max_possible_pass_border() throws IOException {
         fullExam("D", "B", "Z", 100);
         assertFalse(examPrinterImpl.getExamResult());
     }

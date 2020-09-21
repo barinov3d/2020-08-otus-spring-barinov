@@ -3,33 +3,27 @@ package org.homework.config;
 import org.homework.model.Exam;
 import org.homework.utils.ExamPrinterImpl;
 import org.homework.utils.printer.ExamPrinter;
-import org.homework.utils.reader.CsvReader;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
 @Configuration
 public class ExamPrinterConfig {
 
-    private final CsvReader csvReader;
-    private final Integer passBorder;
+    private final Exam exam;
 
-    public ExamPrinterConfig(CsvReader csvReader, @Value("${application.passBorder}") Integer passBorder) {
-        checkBorderValue(passBorder);
-        this.csvReader = csvReader;
-        this.passBorder = passBorder;
+    public ExamPrinterConfig(Exam exam) {
+        this.exam = exam;
     }
 
     @Bean
-    public ExamPrinter examPrinter() throws Exception {
-        return new ExamPrinterImpl(csvReader.getAsExam(passBorder), bufferedReader(), out(), messageSource());
+    public ExamPrinter examPrinter(BufferedReader bufferedReader, PrintStream out, MessageSource messageSource) throws Exception {
+        return new ExamPrinterImpl(exam, bufferedReader, out, messageSource);
     }
 
     @Bean
@@ -46,14 +40,8 @@ public class ExamPrinterConfig {
     public MessageSource messageSource() {
         var ms = new ReloadableResourceBundleMessageSource();
         ms.setBasename("classpath:/i18n/bundle");
-        ms.setDefaultEncoding("WINDOWS-1251");
+        ms.setDefaultEncoding("UTF-8");
         return ms;
-    }
-
-    private void checkBorderValue(Integer passBorder) {
-        if (!((passBorder >= 0) && (passBorder <= 100))) {
-            throw new RuntimeException("Incorrect border value. Value should be: 0 >= value <= 100");
-        }
     }
 
 }

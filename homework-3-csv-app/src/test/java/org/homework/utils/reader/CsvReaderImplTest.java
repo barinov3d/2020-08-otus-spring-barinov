@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(MockitoExtension.class)
-class CsvReaderImpl_UnitTest {
+class CsvReaderImplTest {
 
     private final String question = "q?";
     private final String answer1 = "A - ";
