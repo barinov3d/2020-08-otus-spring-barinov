@@ -1,0 +1,4 @@
+application:
+  locale: ru_RU
+  fileName: questions
+  passBorder: 50
