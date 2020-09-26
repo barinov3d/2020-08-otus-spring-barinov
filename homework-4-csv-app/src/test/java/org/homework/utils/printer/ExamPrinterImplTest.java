@@ -1,6 +1,8 @@
 package org.homework.utils.printer;
 
 import lombok.SneakyThrows;
+import org.homework.config.TextPrinter;
+import org.homework.config.TextReader;
 import org.homework.config.YamlProps;
 import org.homework.model.Answer;
 import org.homework.model.Exam;
@@ -14,11 +16,11 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -34,16 +36,18 @@ import static org.mockito.Mockito.when;
 class ExamPrinterImplTest {
 
     @Autowired
-    PrintStream writer;
+    TextPrinter textPrinter;
+    @MockBean
+    TextReader textReader;
     @Autowired
     YamlProps props;
     @Autowired
     MessageSource messageSource;
     @Mock
     BufferedReader bufferedReader;
-    private ExamPrinter examPrinterImpl;
-    @Mock
+    @MockBean
     private Exam exam;
+    private ExamPrinter examPrinterImpl;
 
 
     @SneakyThrows
@@ -79,20 +83,20 @@ class ExamPrinterImplTest {
     @Order(5)
     void incorrect_pass_border_negative_value() {
         when(exam.getPassBorder()).thenReturn(-50);
-        assertThrows(IncorrectBorderValueException.class, () -> new ExamPrinterImpl(exam, bufferedReader, writer, messageSource));
+        assertThrows(IncorrectBorderValueException.class, () -> new ExamPrinterImpl(exam, textReader, textPrinter, messageSource));
     }
 
     @Test
     @Order(6)
     void incorrect_pass_border_more_than_one_hundred() {
         when(exam.getPassBorder()).thenReturn(101);
-        assertThrows(IncorrectBorderValueException.class, () -> examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer, messageSource));
+        assertThrows(IncorrectBorderValueException.class, () -> examPrinterImpl = new ExamPrinterImpl(exam, textReader, textPrinter, messageSource));
     }
 
     @Test
     @Order(7)
     void try_get_result_before_exam_finished() {
-        examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer, messageSource);
+        examPrinterImpl = new ExamPrinterImpl(exam, textReader, textPrinter, messageSource);
         assertThrows(NotFinishedExamException.class, () -> examPrinterImpl.getExamResult());
     }
 
@@ -112,7 +116,9 @@ class ExamPrinterImplTest {
 
     void fullExam(String firstAnswerFromUser, String secondAnswerFromUser, String thirdAnswerFromUser, int passBorder) throws IOException {
         when(exam.getPassBorder()).thenReturn(passBorder);
-        when(bufferedReader.readLine())
+        when(textReader.getIn()).thenReturn(bufferedReader);
+        final BufferedReader in = textReader.getIn();
+        when(in.readLine())
                 .thenReturn("First name")
                 .thenReturn("Last name")
                 .thenReturn(firstAnswerFromUser)
@@ -127,7 +133,7 @@ class ExamPrinterImplTest {
                 new Line("q3", Collections.singletonList(new Answer(thirdCorrectLetter, "", true)))
         );
         when(exam.getLines()).thenReturn(lines);
-        examPrinterImpl = new ExamPrinterImpl(exam, bufferedReader, writer, messageSource);
+        examPrinterImpl = new ExamPrinterImpl(exam, textReader, textPrinter, messageSource);
         examPrinterImpl.print();
     }
 

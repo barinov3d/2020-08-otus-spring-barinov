@@ -1,6 +1,8 @@
 package org.homework.utils;
 
 import lombok.SneakyThrows;
+import org.homework.config.TextPrinter;
+import org.homework.config.TextReader;
 import org.homework.config.YamlProps;
 import org.homework.model.Answer;
 import org.homework.model.Exam;
@@ -28,10 +30,10 @@ public class ExamPrinterImpl implements ExamPrinter {
     private boolean examResult;
     private boolean isExamFinished;
 
-    public ExamPrinterImpl(Exam exam, BufferedReader in, PrintStream out, MessageSource messageSource) {
+    public ExamPrinterImpl(Exam exam, TextReader textReader, TextPrinter textPrinter, MessageSource messageSource) {
         this.exam = exam;
-        this.in = in;
-        this.out = out;
+        this.in = textReader.getIn();
+        this.out = textPrinter.getOut();
         this.messageSource = messageSource;
         final int passBorder = exam.getPassBorder();
         checkBorderValue(passBorder);
@@ -59,6 +61,19 @@ public class ExamPrinterImpl implements ExamPrinter {
         correctAnswerCounter = 0;
     }
 
+    @Override
+    public boolean getExamResult() {
+        if (!isExamFinished) {
+            throw new NotFinishedExamException("Not possible to show result of exam. Exam is not finished");
+        } else {
+            return examResult;
+        }
+    }
+
+    private void setExamResult(int userResult) {
+        examResult = userResult >= passBorder;
+    }
+
     private String readLine() throws IOException {
         String line;
         StringBuilder rslt = new StringBuilder();
@@ -76,19 +91,6 @@ public class ExamPrinterImpl implements ExamPrinter {
         } else {
             out.println(getMessageFromProps("msg.finish.result.failed") + "...");
         }
-    }
-
-    @Override
-    public boolean getExamResult() {
-        if (!isExamFinished) {
-            throw new NotFinishedExamException("Not possible to show result of exam. Exam is not finished");
-        } else {
-            return examResult;
-        }
-    }
-
-    private void setExamResult(int userResult) {
-        examResult = userResult >= passBorder;
     }
 
     private int getPercentageOfCompletion() {

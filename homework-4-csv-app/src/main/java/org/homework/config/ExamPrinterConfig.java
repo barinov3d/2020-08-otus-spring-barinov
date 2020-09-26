@@ -10,7 +10,6 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 
 @Configuration
 public class ExamPrinterConfig {
@@ -22,18 +21,18 @@ public class ExamPrinterConfig {
     }
 
     @Bean
-    public ExamPrinter examPrinter(BufferedReader bufferedReader, PrintStream out, MessageSource messageSource) throws Exception {
-        return new ExamPrinterImpl(exam, bufferedReader, out, messageSource);
+    public ExamPrinter examPrinter(TextReader textReader, TextPrinter textPrinter, MessageSource messageSource) {
+        return new ExamPrinterImpl(exam, textReader, textPrinter, messageSource);
     }
 
     @Bean
-    public PrintStream out() {
-        return System.out;
+    public TextPrinter out() {
+        return new TextPrinter(System.out);
     }
 
     @Bean
-    public BufferedReader bufferedReader() {
-        return new BufferedReader(new InputStreamReader(System.in));
+    public TextReader in() {
+        return new TextReader(new BufferedReader(new InputStreamReader(System.in)));
     }
 
     @Bean
