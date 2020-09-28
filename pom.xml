@@ -12,6 +12,7 @@
         <module>homework-1-csv-app</module>
         <module>homework-2-csv-app</module>
         <module>homework-3-csv-app</module>
+        <module>homework-4-csv-app</module>
     </modules>
 
     <properties>

@@ -1,0 +1,8 @@
+application:
+  locale: ru_RU
+  fileName: questions
+  passBorder: 50
+spring:
+  shell:
+    interactive:
+      enabled: false
