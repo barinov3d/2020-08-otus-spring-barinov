@@ -33,7 +33,9 @@ public class BookDaoJdbc implements BookDao {
     public Book getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         return jdbc.queryForObject("select * from books where id = :id", params, new BookMapper());
+        //return jdbc.queryForObject("select b.* from books b left join authors a on a.id = b.author_id where b.id = :id", params, new BookMapper());
     }
+
 
     @Override
     public List<Book> getAll() {
@@ -57,8 +59,10 @@ public class BookDaoJdbc implements BookDao {
         @Override
         public Book mapRow(ResultSet resultSet, int i) throws SQLException {
             long id = resultSet.getLong("id");
-            String title = resultSet.getString("title");
-            return new Book(id, title);
+            final String title = resultSet.getString("title");
+            final long author = resultSet.getLong("author_id");
+            final long genre = resultSet.getLong("genre_id");
+            return new Book(id, title, author, genre);
         }
     }
 }
