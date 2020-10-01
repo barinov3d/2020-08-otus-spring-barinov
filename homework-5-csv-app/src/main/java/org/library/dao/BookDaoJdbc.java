@@ -1,16 +1,14 @@
 package org.library.dao;
 
 import org.library.domain.Book;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class BookDaoJdbc implements BookDao {
@@ -22,6 +20,11 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
+    public int count() {
+        return jdbc.queryForObject("select count(*) from books", new HashMap<>(), Integer.class);
+    }
+
+    @Override
     public void insert(Book book) {
         Map<String, Object> params = new HashMap<>();
         params.put("id", book.getId());
@@ -30,15 +33,18 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
-    public Book getById(long id) {
+    public Optional<Book> findById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-        return jdbc.queryForObject("select * from books where id = :id", params, new BookMapper());
-        //return jdbc.queryForObject("select b.* from books b left join authors a on a.id = b.author_id where b.id = :id", params, new BookMapper());
+        try {
+            return Optional.of(jdbc.queryForObject("select * from books where id = :id", params, new BookMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
 
     @Override
-    public List<Book> getAll() {
+    public List<Book> findAll() {
         return jdbc.query("select * from books", new BookMapper());
     }
 
@@ -51,7 +57,10 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
-    public void deleteById(Book book) {
+    public void deleteById(long id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        jdbc.update("delete from books where id=:id", params);
     }
 
     private static class BookMapper implements RowMapper<Book> {
