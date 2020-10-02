@@ -29,14 +29,16 @@ public class BookDaoJdbc implements BookDao {
         Map<String, Object> params = new HashMap<>();
         params.put("id", book.getId());
         params.put("title", book.getTitle());
-        jdbc.update("insert into books (id, `title`) values (:id, :title)", params);
+        params.put("author_id", book.getAuthorId());
+        params.put("genre_id", book.getGenreId());
+        jdbc.update("insert into books (id, `title`,`author_id`,`genre_id`) values (:id, :title,:author_id,:genre_id)", params);
     }
 
     @Override
     public Optional<Book> findById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         try {
-            return Optional.of(jdbc.queryForObject("select * from books where id = :id", params, new BookMapper()));
+            return Optional.ofNullable(jdbc.queryForObject("select * from books where id = :id", params, new BookMapper()));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

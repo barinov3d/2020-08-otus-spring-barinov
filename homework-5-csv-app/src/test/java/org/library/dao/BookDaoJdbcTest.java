@@ -45,9 +45,12 @@ class BookDaoJdbcTest {
     @Test
     @Order(3)
     void shouldInsertBook() {
-        bookRepository.insert(new Book(NEW_BOOK_ID, NEW_BOOK_TITLE, 4, 2));
-        assertThat(bookRepository.findById(NEW_BOOK_ID)).isNotEmpty().get()
-                .hasFieldOrPropertyWithValue("title", NEW_BOOK_TITLE);
+        final Book newBook = new Book(NEW_BOOK_ID, NEW_BOOK_TITLE, 4, 2);
+        bookRepository.insert(newBook);
+        final Book actualInDb = bookRepository.findById(NEW_BOOK_ID).get();
+        assertThat(actualInDb).isEqualTo(newBook);
+/*        assertThat(bookRepository.findById(NEW_BOOK_ID)).isNotEmpty().get()
+                .hasFieldOrPropertyWithValue("title", NEW_BOOK_TITLE);*/
     }
 
     @Test

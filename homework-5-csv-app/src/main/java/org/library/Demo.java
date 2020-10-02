@@ -1,8 +1,5 @@
 package org.library;
 
-import org.library.dao.AuthorDao;
-import org.library.dao.BookDao;
-import org.library.dao.GenreDao;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -15,14 +12,6 @@ public class Demo {
 
     public static void main(String[] args) throws SQLException {
         ApplicationContext context = SpringApplication.run(Demo.class);
-        BookDao bookDao = context.getBean(BookDao.class);
-        AuthorDao authorDao = context.getBean(AuthorDao.class);
-        GenreDao genreDao = context.getBean(GenreDao.class);
-        System.out.println("All books " + bookDao.findAll());
-        System.out.println("Book " + bookDao.findById(1));
-        //System.out.println("All authors " + authorDao.getAll());
-        //System.out.println("All genre " + genreDao.getAll());
-        //Console.main(args);
     }
 
 }
