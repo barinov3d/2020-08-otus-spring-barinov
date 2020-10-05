@@ -9,13 +9,13 @@ public interface BookDao {
 
     int count();
 
-    void insert(Book book);
+    void add(Book book);
 
     Optional<Book> findById(long id);
 
     List<Book> findAll();
 
-    void updateTitle(Book book);
+    void update(Book book);
 
     void deleteById(long id);
 }
