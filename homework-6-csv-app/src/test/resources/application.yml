@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
+    data: test-data.sql
+  shell:
+    interactive:
+      enabled: false
+  jpa:
+    show-sql: true
