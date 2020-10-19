@@ -3,7 +3,6 @@ package org.library.dao;
 import org.library.domain.Book;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface BookDao {
 
@@ -11,7 +10,7 @@ public interface BookDao {
 
     Book save(Book book);
 
-    Optional<Book> findById(long id);
+    Book findById(long id);
 
     List<Book> findAll();
 

@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Transactional
@@ -35,16 +34,8 @@ public class BookDaoJdbc implements BookDao {
     }
 
     @Override
-    public Optional<Book> findById(long id) {
-        TypedQuery<Book> query = em.createQuery(
-                "select e from Book e where e.id = :id"
-                , Book.class);
-        query.setParameter("id", id);
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+    public Book findById(long id) {
+        return em.find(Book.class, id);
     }
 
 
@@ -66,18 +57,13 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public void updateCommentById(long id, String comment) {
-        Query query = em.createQuery("update Book b set b.comment = :comment where b.id = :id");
-        query.setParameter("id", id);
-        query.setParameter("comment", comment);
-        query.executeUpdate();
+        final Book book = findById(id);
+        book.setComment(comment);
+        em.merge(book);
     }
 
     @Override
     public void deleteById(long id) {
-        Query query = em.createQuery("delete " +
-                "from Book b " +
-                "where b.id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        em.remove(findById(id));
     }
 }

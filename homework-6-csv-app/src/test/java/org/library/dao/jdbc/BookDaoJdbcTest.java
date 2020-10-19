@@ -47,13 +47,13 @@ class BookDaoJdbcTest {
     @Order(3)
     void shouldAdd() {
         bookRepository.save(newBook);
-        assertThat(bookRepository.findById(NEW_BOOK_ID).get()).isEqualTo(newBook);
+        assertThat(bookRepository.findById(NEW_BOOK_ID)).isEqualTo(newBook);
     }
 
     @Test
     @Order(4)
     void shouldFindById() {
-        assertThat(bookRepository.findById(NEW_BOOK_ID).get()).isEqualTo(newBook);
+        assertThat(bookRepository.findById(NEW_BOOK_ID)).isEqualTo(newBook);
     }
 
     @Test
@@ -61,7 +61,7 @@ class BookDaoJdbcTest {
     void shouldUpdateTitle() {
         final String expectedTitle = NEW_BOOK_TITLE + " updated";
         bookRepository.updateTitleById(NEW_BOOK_ID, expectedTitle);
-        final Book actualBook = bookRepository.findById(NEW_BOOK_ID).get();
+        final Book actualBook = bookRepository.findById(NEW_BOOK_ID);
         assertThat(actualBook.getTitle()).isEqualTo(expectedTitle);
     }
 
@@ -70,7 +70,7 @@ class BookDaoJdbcTest {
     void shouldUpdateComment() {
         final String expectedComment = NEW_BOOK_COMMENT + " updated";
         bookRepository.updateCommentById(NEW_BOOK_ID, expectedComment);
-        final Book actualBook = bookRepository.findById(NEW_BOOK_ID).get();
+        final Book actualBook = bookRepository.findById(NEW_BOOK_ID);
         assertThat(actualBook.getComment()).isEqualTo(expectedComment);
     }
 

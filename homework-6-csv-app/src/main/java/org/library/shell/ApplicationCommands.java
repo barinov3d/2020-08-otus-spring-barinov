@@ -44,11 +44,7 @@ public class ApplicationCommands {
 
     @ShellMethod(value = "find book by id 'find -id 1'", key = {"find"})
     public Book findById(@ShellOption(value = {"-id"}) long id) {
-        final Optional<Book> book = bookDao.findById(id);
-        if (book.isEmpty()) {
-            throw new RuntimeException("Book with id '" + id + "' not exist");
-        }
-        return book.get();
+        return bookDao.findById(id);
     }
 
     @ShellMethod(value = "find all books", key = {"findb"})
