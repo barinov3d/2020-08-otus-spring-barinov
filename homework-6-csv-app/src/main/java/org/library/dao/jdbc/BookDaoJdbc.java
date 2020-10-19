@@ -6,7 +6,10 @@ import org.library.domain.Book;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
+import javax.persistence.EntityGraph;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @AllArgsConstructor
@@ -19,8 +22,7 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public long count() {
-        return em.createQuery(
-                "select count(e) from Book e", Long.class).getSingleResult();
+        return em.createQuery("select count(e) from Book e", Long.class).getSingleResult();
     }
 
     @Override
@@ -42,24 +44,20 @@ public class BookDaoJdbc implements BookDao {
     @Override
     public List<Book> findAll() {
         EntityGraph<?> entityGraph = em.getEntityGraph("book-author-genre-entity-graph");
-        final TypedQuery<Book> query = em.createQuery("select b from Book b join fetch b.author join fetch b.genre", Book.class);
+        final TypedQuery<Book> query = em.createQuery("select b from Book b", Book.class);
         query.setHint("javax.persistence.fetchgraph", entityGraph);
         return query.getResultList();
+
     }
 
     @Override
     public void updateTitleById(long id, String title) {
-        Query query = em.createQuery("update Book b set b.title = :title where b.id = :id");
-        query.setParameter("id", id);
-        query.setParameter("title", title);
-        query.executeUpdate();
+        findById(id).setTitle(title);
     }
 
     @Override
     public void updateCommentById(long id, String comment) {
-        final Book book = findById(id);
-        book.setComment(comment);
-        em.merge(book);
+        findById(id).setComment(comment);
     }
 
     @Override

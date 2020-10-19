@@ -62,15 +62,13 @@ public class ApplicationCommands {
         return genreDao.findAll();
     }
 
-    @ShellMethod(value = "update -id 'id' -title 'book title'", key = {"updatet"})
-    public void updateTitleById(@ShellOption(value = {"-id"}) long id,
-                                @ShellOption(value = {"-title"}) String title) {
+    @ShellMethod(value = "updatet -id 'id' 'book title'", key = {"updatet"})
+    public void updateTitleById(@ShellOption(value = {"-id"}) long id, String title) {
         bookDao.updateTitleById(id, title);
     }
 
-    @ShellMethod(value = "update -id 'id' -comment 'book comment'", key = {"updatec"})
-    public void updateCommentById(@ShellOption(value = {"-id"}) long id,
-                                  @ShellOption(value = {"-comment"}) String comment) {
+    @ShellMethod(value = "updatec -id 'id' 'book comment'", key = {"updatec"})
+    public void updateCommentById(@ShellOption(value = {"-id"}) long id, String comment) {
         bookDao.updateCommentById(id, comment);
     }
 

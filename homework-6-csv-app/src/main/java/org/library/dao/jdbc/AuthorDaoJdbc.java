@@ -37,10 +37,7 @@ public class AuthorDaoJdbc implements AuthorDao {
 
     @Override
     public Optional<Author> findByName(String name) {
-        TypedQuery<Author> query = em.createQuery("select a " +
-                        "from Author a " +
-                        "where a.name = :name",
-                Author.class);
+        TypedQuery<Author> query = em.createQuery("select a from Author a where a.name = :name", Author.class);
         query.setParameter("name", name);
         try {
             return Optional.of(query.getSingleResult());
