@@ -1,12 +1,12 @@
 package org.library.shell;
 
 import lombok.AllArgsConstructor;
-import org.library.dao.AuthorDao;
-import org.library.dao.BookDao;
-import org.library.dao.GenreDao;
-import org.library.domain.Author;
-import org.library.domain.Book;
-import org.library.domain.Genre;
+import org.library.repositories.AuthorRepository;
+import org.library.repositories.BookRepository;
+import org.library.repositories.GenreRepository;
+import org.library.models.Author;
+import org.library.models.Book;
+import org.library.models.Genre;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -17,13 +17,13 @@ import java.util.Optional;
 @ShellComponent
 @AllArgsConstructor
 public class ApplicationCommands {
-    private final BookDao bookDao;
-    private final AuthorDao authorDao;
-    private final GenreDao genreDao;
+    private final BookRepository bookRepository;
+    private final AuthorRepository authorRepository;
+    private final GenreRepository genreRepository;
 
     @ShellMethod(value = "total book count", key = {"count"})
     public String count() {
-        return "Books total count is: " + bookDao.count();
+        return "Books total count is: " + bookRepository.count();
     }
 
     @ShellMethod(value = "add -title 'book title' -comment -author 'author name' -genre 'genre name'", key = {"add"})
@@ -31,50 +31,56 @@ public class ApplicationCommands {
                     @ShellOption(value = {"-comment"}, defaultValue = "") String comment,
                     @ShellOption(value = {"-author"}) String authorName,
                     @ShellOption(value = {"-genre"}) String genreName) {
-        final Optional<Author> authorOptional = authorDao.findByName(authorName);
+        final Optional<Author> authorOptional = authorRepository.findByName(authorName);
         if (authorOptional.isEmpty()) {
-            authorDao.save(new Author(0, authorName));
+            authorRepository.save(new Author(0, authorName));
         }
-        final Optional<Genre> genreOptional = genreDao.findByName(genreName);
+        final Optional<Genre> genreOptional = genreRepository.findByName(genreName);
         if (genreOptional.isEmpty()) {
-            genreDao.save(new Genre(0, genreName));
+            genreRepository.save(new Genre(0, genreName));
         }
-        bookDao.save(new Book(0, title, comment, authorDao.findByName(authorName).get(), genreDao.findByName(genreName).get()));
+        bookRepository.save(new Book(0, title, comment, authorRepository.findByName(authorName).get(),
+                genreRepository.findByName(genreName).get()));
     }
 
     @ShellMethod(value = "find book by id 'find -id 1'", key = {"find"})
     public Book findById(@ShellOption(value = {"-id"}) long id) {
-        return bookDao.findById(id);
+        return bookRepository.findById(id);
     }
 
     @ShellMethod(value = "find all books", key = {"findb"})
     public List<Book> findAllBooks() {
-        return bookDao.findAll();
+        return bookRepository.findAll();
     }
 
     @ShellMethod(value = "find all book authors", key = {"finda"})
     public List<Author> findAllAuthors() {
-        return authorDao.findAll();
+        return authorRepository.findAll();
     }
 
     @ShellMethod(value = "find all book genres", key = {"findg"})
     public List<Genre> findAllGenres() {
-        return genreDao.findAll();
+        return genreRepository.findAll();
+    }
+
+    @ShellMethod(value = "find all author books", key = {"findauthorbooks"})
+    public List<Book> findAllAuthorBooks(@ShellOption(value = {"-name"}) String name) {
+        return bookRepository.findAllAuthorBooks(authorRepository.findByName(name).get());
     }
 
     @ShellMethod(value = "updatet -id 'id' 'book title'", key = {"updatet"})
     public void updateTitleById(@ShellOption(value = {"-id"}) long id, String title) {
-        bookDao.updateTitleById(id, title);
+        bookRepository.updateTitleById(id, title);
     }
 
     @ShellMethod(value = "updatec -id 'id' 'book comment'", key = {"updatec"})
     public void updateCommentById(@ShellOption(value = {"-id"}) long id, String comment) {
-        bookDao.updateCommentById(id, comment);
+        bookRepository.updateCommentById(id, comment);
     }
 
     @ShellMethod(value = "'delete -id'", key = {"delete"})
     public void deleteById(@ShellOption(value = {"-id"}) long id) {
-        bookDao.deleteById(id);
+        bookRepository.deleteById(id);
     }
 
 }

@@ -1,12 +1,12 @@
 package org.library.shell;
 
 import lombok.RequiredArgsConstructor;
-import org.library.dao.AuthorDao;
-import org.library.dao.BookDao;
-import org.library.dao.GenreDao;
-import org.library.domain.Author;
-import org.library.domain.Book;
-import org.library.domain.Genre;
+import org.library.repositories.AuthorDao;
+import org.library.repositories.BookDao;
+import org.library.repositories.GenreDao;
+import org.library.models.Author;
+import org.library.models.Book;
+import org.library.models.Genre;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
