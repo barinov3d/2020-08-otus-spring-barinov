@@ -37,23 +37,28 @@ class BookRepositoryJdbcTest {
     @Autowired
     private BookRepositoryJdbc bookRepository;
 
+    @BeforeEach
+    void setUp() {
+        bookRepository.save(newBook);
+        bookRepository.save(newBook2);
+    }
+
+    @AfterEach
+    void clear() {
+        bookRepository.deleteById(NEW_BOOK_ID);
+        bookRepository.deleteById(NEW_BOOK2_ID);
+    }
+
     @Test
     @Order(1)
     void shouldReturnTotalCount() {
-        assertThat(bookRepository.count()).isEqualTo(STARTED_BOOKS_COUNT);
+        assertThat(bookRepository.count()).isEqualTo(STARTED_BOOKS_COUNT + 2);
     }
 
     @Test
     @Order(2)
     void shouldFindAll() {
-        assertThat(bookRepository.findAll().size()).isEqualTo(STARTED_BOOKS_COUNT);
-    }
-
-    @Test
-    @Order(3)
-    void shouldAdd() {
-        bookRepository.save(newBook);
-        assertThat(bookRepository.findById(NEW_BOOK_ID)).isEqualTo(newBook);
+        assertThat(bookRepository.findAll().size()).isEqualTo(STARTED_BOOKS_COUNT + 2);
     }
 
     @Test
@@ -92,17 +97,16 @@ class BookRepositoryJdbcTest {
     @Test
     @Order(99)
     void shouldDeleteById() {
+        System.out.println(bookRepository.findAll());
         bookRepository.deleteById(NEW_BOOK_ID);
+        System.out.println(bookRepository.findAll());
         assertThat(bookRepository.findAll()).doesNotContain(newBook);
     }
 
     @Test
     @Order(8)
     void findAllAuthorBooks() {
-        System.out.println(bookRepository.findAll());
         final List<Book> allAuthorBooks = bookRepository.findAllAuthorBooks(new Author(NEW_BOOK_AUTHOR_ID, NEW_BOOK_AUTHOR_NAME));
-        System.out.println(bookRepository.findAll());
-        System.out.println(allAuthorBooks);
-        assertThat(allAuthorBooks).hasSize(2);
+        assertThat(allAuthorBooks).contains(newBook,newBook2);
     }
 }

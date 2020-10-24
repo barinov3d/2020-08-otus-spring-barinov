@@ -69,10 +69,13 @@ public class BookRepositoryJdbc implements BookRepository {
     @Override
     @Transactional
     public void deleteById(long id) {
-        em.remove(findById(id));
+        final Book book = findById(id);
+        em.remove(book);
+        em.persist(book);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Book> findAllAuthorBooks(Author author) {
         final TypedQuery<Book> query = em.createQuery("select b from Book b where b.author=:author", Book.class);
         query.setParameter("author",author);
