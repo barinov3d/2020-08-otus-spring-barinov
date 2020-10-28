@@ -62,7 +62,7 @@ class BookRepositoryJdbcTest {
     }
 
     @Test
-    @Order(4)
+    @Order(3)
     void shouldAddSeveralBooks() {
         bookRepository.save(newBook);
         bookRepository.save(newBook2);
@@ -71,13 +71,13 @@ class BookRepositoryJdbcTest {
     }
 
     @Test
-    @Order(5)
+    @Order(4)
     void shouldFindById() {
         assertThat(bookRepository.findById(NEW_BOOK_ID)).isEqualTo(newBook);
     }
 
     @Test
-    @Order(6)
+    @Order(5)
     void shouldUpdateTitle() {
         final String expectedTitle = NEW_BOOK_TITLE + " updated";
         bookRepository.updateTitleById(NEW_BOOK_ID, expectedTitle);
@@ -86,7 +86,7 @@ class BookRepositoryJdbcTest {
     }
 
     @Test
-    @Order(7)
+    @Order(6)
     void shouldUpdateComment() {
         final String expectedComment = NEW_BOOK_COMMENT + " updated";
         bookRepository.updateCommentById(NEW_BOOK_ID, expectedComment);
@@ -95,18 +95,16 @@ class BookRepositoryJdbcTest {
     }
 
     @Test
-    @Order(99)
-    void shouldDeleteById() {
-        System.out.println(bookRepository.findAll());
-        bookRepository.deleteById(NEW_BOOK_ID);
-        System.out.println(bookRepository.findAll());
-        assertThat(bookRepository.findAll()).doesNotContain(newBook);
+    @Order(7)
+    void findAllAuthorBooks() {
+        final List<Book> allAuthorBooks = bookRepository.findAllAuthorBooks(new Author(NEW_BOOK_AUTHOR_ID, NEW_BOOK_AUTHOR_NAME));
+        assertThat(allAuthorBooks).contains(newBook,newBook2);
     }
 
     @Test
     @Order(8)
-    void findAllAuthorBooks() {
-        final List<Book> allAuthorBooks = bookRepository.findAllAuthorBooks(new Author(NEW_BOOK_AUTHOR_ID, NEW_BOOK_AUTHOR_NAME));
-        assertThat(allAuthorBooks).contains(newBook,newBook2);
+    void shouldDeleteById() {
+        bookRepository.deleteById(NEW_BOOK_ID);
+        assertThat(bookRepository.findAll()).doesNotContain(newBook);
     }
 }

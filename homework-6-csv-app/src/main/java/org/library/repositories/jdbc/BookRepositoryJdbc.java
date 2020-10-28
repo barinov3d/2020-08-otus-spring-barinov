@@ -69,7 +69,7 @@ public class BookRepositoryJdbc implements BookRepository {
     @Override
     @Transactional
     public void deleteById(long id) {
-        final Book book = findById(id);
+        Book book = em.find(Book.class, id);
         em.remove(book);
         em.persist(book);
     }
