@@ -1,7 +1,8 @@
 package org.library.repositories.jdbc;
 
-import org.library.repositories.GenreRepository;
 import org.library.models.Genre;
+import org.library.repositories.GenreRepository;
+import org.library.repositories.jdbc.exceptions.GenreNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,13 +38,37 @@ public class GenreRepositoryJdbc implements GenreRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Genre> findByName(String name) {
+    public Genre findByName(String name) {
         TypedQuery<Genre> query = em.createQuery("select g from Genre g where g.name = :name", Genre.class);
         query.setParameter("name", name);
         try {
-            return Optional.of(query.getSingleResult());
+            return query.getSingleResult();
         } catch (NoResultException e) {
-            return Optional.empty();
+            throw new GenreNotFoundException("Author with name '" + name + "' not found");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateNameById(long id, String name) {
+        findById(id).setName(name);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(long id) {
+        Genre genre = em.find(Genre.class, id);
+        em.remove(em.merge(genre));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Genre findById(long id) {
+        final Optional<Genre> optionalGenre = Optional.ofNullable(em.find(Genre.class, id));
+        if (optionalGenre.isPresent()) {
+            return optionalGenre.get();
+        } else {
+            throw new GenreNotFoundException("Genre with id=" + "'" + id + " not found");
         }
     }
 }

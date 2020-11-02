@@ -3,7 +3,6 @@ package org.library.repositories;
 import org.library.models.Author;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AuthorRepository {
 
@@ -11,6 +10,12 @@ public interface AuthorRepository {
 
     List<Author> findAll();
 
-    Optional<Author> findByName(String name);
+    Author findByName(String name);
+
+    void updateNameById(long id, String name);
+
+    void deleteById(long id);
+
+    Author findById(long id);
 
 }

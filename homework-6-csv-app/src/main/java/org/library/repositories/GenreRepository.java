@@ -3,7 +3,6 @@ package org.library.repositories;
 import org.library.models.Genre;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface GenreRepository {
 
@@ -11,6 +10,12 @@ public interface GenreRepository {
 
     List<Genre> findAll();
 
-    Optional<Genre> findByName(String name);
+    Genre findByName(String name);
+
+    void updateNameById(long id, String name);
+
+    void deleteById(long id);
+
+    Genre findById(long id);
 
 }
