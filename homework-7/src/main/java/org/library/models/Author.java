@@ -16,6 +16,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "authors")
+@NamedEntityGraph(name = "Author.books", attributeNodes = @NamedAttributeNode("books"))
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +27,7 @@ public class Author {
 
     @Fetch(FetchMode.SELECT)
     @BatchSize(size = 5)
-    @ManyToMany(targetEntity = Book.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE, mappedBy = "author")
+    @ManyToMany(targetEntity = Book.class, fetch = FetchType.LAZY, cascade = CascadeType.MERGE, mappedBy = "author")
     private List<Book> books;
 
     @Override
