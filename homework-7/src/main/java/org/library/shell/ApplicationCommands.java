@@ -3,10 +3,12 @@ package org.library.shell;
 import lombok.AllArgsConstructor;
 import org.library.models.Author;
 import org.library.models.Book;
+import org.library.models.Comment;
 import org.library.models.Genre;
-import org.library.repositories.AuthorRepository;
-import org.library.repositories.BookRepository;
-import org.library.repositories.GenreRepository;
+import org.library.services.AuthorService;
+import org.library.services.BookService;
+import org.library.services.CommentService;
+import org.library.services.GenreService;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -16,65 +18,111 @@ import java.util.List;
 @ShellComponent
 @AllArgsConstructor
 public class ApplicationCommands {
-    private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
-    private final GenreRepository genreRepository;
+    private final BookService bookService;
+    private final AuthorService authorService;
+    private final GenreService genreService;
+    private final CommentService commentService;
 
-    @ShellMethod(value = "total book count", key = {"count"})
-    public String count() {
-        return "Books total count is: " + bookRepository.count();
+    /**
+     * Creates book
+     */
+    @ShellMethod(value = "book --create -title 'My title' " +
+            "-author_name 'Bruce Eckel' -genre_name 'Other'",
+            key = {"book --create"})
+    public void createBook(@ShellOption(value = {"-title"}) String title,
+                           @ShellOption(value = {"-author_name"}) String authorName,
+                           @ShellOption(value = {"-genre_name"}) String genreName
+    ) {
+        bookService.createBook(title, authorName, genreName);
     }
 
-/*
-    @ShellMethod(value = "add -title 'book title' -comment 'my comment' -author 'Bruce Eckel' -genre 'Other'", key = {"add"})
-    public void add(@ShellOption(value = {"-title"}) String title,
-                    @ShellOption(value = {"-comment"}, defaultValue = "") String comment,
-                    @ShellOption(value = {"-author"}) String authorName,
-                    @ShellOption(value = {"-genre"}) String genreName) {
-        final Book book = new Book(0, title, comment, authorRepository.findByName(authorName),
-                genreRepository.findByName(genreName));
-        bookRepository.save(book);
-    }
-*/
-
-    @ShellMethod(value = "find -id 1", key = {"find"})
-    public Book findById(@ShellOption(value = {"-id"}) long id) {
-        return bookRepository.findById(id).get();
+    /**
+     * Finds by id
+     */
+    @ShellMethod(value = "book --find -id 1", key = {"book --find"})
+    public Book findBookById(@ShellOption(value = {"-id"}) long id) {
+        return bookService.findById(id);
     }
 
-    @ShellMethod(value = "find all books", key = {"findb"})
+    /**
+     * Finds all books
+     */
+    @ShellMethod(value = "book --find --all", key = {"book --find --all"})
     public List<Book> findAllBooks() {
-        return bookRepository.findAll();
+        return bookService.findAllBooks();
     }
 
-    @ShellMethod(value = "find all book authors", key = {"finda"})
+    /**
+     * Updates book title
+     */
+    @ShellMethod(value = "book --update -id 1 -title 'Updated title'", key = {"book --update"})
+    public void updateTitle(@ShellOption(value = {"-id"}) long id,
+                            @ShellOption(value = {"-title"}) String title) {
+        bookService.updateTitle(id, title);
+    }
+
+    /**
+     * Deletes book by id
+     */
+    @ShellMethod(value = "book --delete -id 1 ", key = {"book --delete"})
+    public void deleteBook(@ShellOption(value = {"-id"}) long id) {
+        bookService.deleteBook(id);
+    }
+
+    @ShellMethod(value = "book --find --all --by_author -author 'Bruce Eckel'", key = {"book --find --all --by_author"})
+    public List<Book> findAllAuthorBooks(@ShellOption(value = {"-author"}) String authorName) {
+        return bookService.findAllAuthorBooks(authorName);
+    }
+
+    /**
+     * Creates author
+     */
+    @ShellMethod(value = "author --create -name 'author name'",
+            key = {"author --create"})
+    public void createAuthor(@ShellOption(value = {"-name"}) String authorName) {
+        authorService.createAuthor(authorName);
+    }
+
+    /**
+     * Finds all authors
+     */
+    @ShellMethod(value = "author --find --all", key = {"author --find --all"})
     public List<Author> findAllAuthors() {
-        return authorRepository.findAll();
+        return authorService.findAll();
     }
 
-    @ShellMethod(value = "find all book genres", key = {"findg"})
+    /**
+     * Creates genre
+     */
+    @ShellMethod(value = "genre --create -name 'genre name'",
+            key = {"genre --create"})
+    public void createGenre(@ShellOption(value = {"-name"}) String genreName) {
+        genreService.createGenre(genreName);
+    }
+
+    /**
+     * Finds all genres
+     */
+    @ShellMethod(value = "genre --find --all", key = {"genre --find --all"})
     public List<Genre> findAllGenres() {
-        return genreRepository.findAll();
+        return genreService.findAll();
     }
 
-/*    @ShellMethod(value = "find all author books: findab -name 'Bruce Eckel'", key = {"findab"})
-    public List<Book> findAllAuthorBooks(@ShellOption(value = {"-name"}) String name) {
-        return bookRepository.findAll(authorRepository.findByName(name));
-    }*/
+    /**
+     * Creates comment
+     */
+    @ShellMethod(value = "comment --create -text 'comment text' -book_id 1",
+            key = {"comment --create"})
+    public void createComment(@ShellOption(value = {"-text"}) String commentText, @ShellOption(value = {"-book_id"}) long bookId) {
+        commentService.createComment(commentText, bookId);
+    }
 
-/*    @ShellMethod(value = "updatet -id 'id' 'book title'", key = {"updatet"})
-    public void updateTitleById(@ShellOption(value = {"-id"}) long id, String title) {
-        bookRepository.updateTitleById(id, title);
-    }*/
-/*
-    @ShellMethod(value = "updatec -id 'id' 'book comment'", key = {"updatec"})
-    public void updateCommentById(@ShellOption(value = {"-id"}) long id, String comment) {
-        bookRepository.updateCommentById(id, comment);
-    }*/
-
-    @ShellMethod(value = "delete -id", key = {"delete"})
-    public void deleteById(@ShellOption(value = {"-id"}) long id) {
-        bookRepository.deleteById(id);
+    /**
+     * Finds all comments
+     */
+    @ShellMethod(value = "comment --find --all", key = {"comment --find --all"})
+    public List<Comment> findAllComments() {
+        return commentService.findAll();
     }
 
 }

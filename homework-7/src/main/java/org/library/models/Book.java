@@ -3,8 +3,12 @@ package org.library.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -23,8 +27,10 @@ public class Book {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "comment")
-    private String comment;
+    @Fetch(FetchMode.SELECT)
+    @BatchSize(size = 5)
+    @OneToMany(targetEntity = Comment.class, fetch = FetchType.LAZY, mappedBy = "book")
+    private List<Comment> comments;
 
     @ManyToOne(targetEntity = Author.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "author_id")
@@ -39,16 +45,12 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return id == book.id &&
-                Objects.equals(title, book.title) &&
-                Objects.equals(comment, book.comment) &&
-                Objects.equals(author, book.author) &&
-                Objects.equals(genre, book.genre);
+        return id == book.id && Objects.equals(title, book.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, comment, author, genre);
+        return Objects.hash(id, title);
     }
 
     @Override
@@ -56,7 +58,6 @@ public class Book {
         return "Book{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", comment='" + comment + '\'' +
                 ", author=" + "Author(id=" + author.getId() + ", name=" + author.getName() + ")" +
                 ", genre=" + genre +
                 '}';

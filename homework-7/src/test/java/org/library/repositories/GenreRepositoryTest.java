@@ -1,8 +1,7 @@
-package org.library.repositories.jdbc;
+package org.library.repositories;
 
 import org.junit.jupiter.api.*;
 import org.library.models.Genre;
-import org.library.repositories.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,9 +18,16 @@ class GenreRepositoryTest {
 
     private static final String EXISTING_GENRE_NAME = "Other";
     private static final Long EXISTING_GENRE_ID = 2L;
+    private static final int STARTED_GENRE_COUNT = 2;
 
     @Autowired
     private GenreRepository genreRepository;
+
+    @Test
+    @Order(0)
+    void shouldfindAll() {
+        assertThat(genreRepository.findAll().size()).isEqualTo(STARTED_GENRE_COUNT);
+    }
 
     @Test
     @Order(1)
@@ -34,7 +40,7 @@ class GenreRepositoryTest {
     @Order(2)
     void shouldUpdateNameById() {
         final String expectedName = EXISTING_GENRE_NAME + " updated";
-        final Genre actualGenre = genreRepository.findByName(EXISTING_GENRE_NAME);
+        final Genre actualGenre = genreRepository.findByName(EXISTING_GENRE_NAME).get();
         actualGenre.setName(expectedName);
         genreRepository.save(actualGenre);
         final Genre actualAuthor = genreRepository.findById(EXISTING_GENRE_ID).get();
