@@ -3,6 +3,7 @@ package org.library.models;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Data
+@ToString(exclude = "books")
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

@@ -5,10 +5,12 @@ import org.library.models.Author;
 import org.library.models.Book;
 import org.library.models.Comment;
 import org.library.models.Genre;
+import org.library.repositories.AuthorRepository;
 import org.library.services.AuthorService;
 import org.library.services.BookService;
 import org.library.services.CommentService;
 import org.library.services.GenreService;
+import org.library.services.exceptions.AuthorNotFoundException;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -20,6 +22,7 @@ import java.util.List;
 public class ApplicationCommands {
     private final BookService bookService;
     private final AuthorService authorService;
+    private final AuthorRepository authorRepository;
     private final GenreService genreService;
     private final CommentService commentService;
 
@@ -62,7 +65,7 @@ public class ApplicationCommands {
     }
 
     /**
-     * Deletes book by id
+     * Find all author books
      */
     @ShellMethod(value = "book --delete -id 1 ", key = {"book --delete"})
     public void deleteBook(@ShellOption(value = {"-id"}) long id) {
@@ -71,7 +74,9 @@ public class ApplicationCommands {
 
     @ShellMethod(value = "book --find --all --by_author -author 'Bruce Eckel'", key = {"book --find --all --by_author"})
     public List<Book> findAllAuthorBooks(@ShellOption(value = {"-author"}) String authorName) {
-        return bookService.findAllAuthorBooks(authorName);
+        final Author author = authorRepository.findByName(authorName)
+                .orElseThrow(() -> new AuthorNotFoundException("Author with name '" + authorName + "' not exist"));
+        return author.getBooks();
     }
 
     /**

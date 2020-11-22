@@ -6,10 +6,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Data
 @Table(name = "genres")
 public class Genre {
     @Id

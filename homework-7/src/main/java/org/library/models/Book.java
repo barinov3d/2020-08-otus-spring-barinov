@@ -1,20 +1,19 @@
 package org.library.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Objects;
 
+@Data
+@ToString(exclude = {"comments"})
+@EqualsAndHashCode(of = {"id", "title"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Data
 @Table(name = "books")
 @NamedEntityGraph(name = "book-author-genre-entity-graph",
         attributeNodes = {
@@ -40,26 +39,4 @@ public class Book {
     @JoinColumn(name = "genre_id")
     private Genre genre;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Book book = (Book) o;
-        return id == book.id && Objects.equals(title, book.title);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title);
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", author=" + "Author(id=" + author.getId() + ", name=" + author.getName() + ")" +
-                ", genre=" + genre +
-                '}';
-    }
 }
