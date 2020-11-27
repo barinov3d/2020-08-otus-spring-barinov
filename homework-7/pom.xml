@@ -6,13 +6,13 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.3.3.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>org.example</groupId>
-    <artifactId>homework-6-csv-app</artifactId>
+    <artifactId>homework-7</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>homework-6-csv-app</name>
-    <description>homework-6-csv-app</description>
+    <name>homework-7</name>
+    <description>homework-7</description>
 
     <properties>
         <java.version>11</java.version>
