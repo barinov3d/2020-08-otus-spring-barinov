@@ -22,19 +22,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class BookRepositoryTest {
     private static final long STARTED_BOOKS_COUNT = 3;
-    private static final long NEW_BOOK_ID = 4;
-    private static final long NEW_BOOK2_ID = 5;
+    private static final String NEW_BOOK_ID = "4";
+    private static final String NEW_BOOK2_ID = "5";
     private static final String NEW_BOOK_TITLE = "Thinking in java";
-    private static final long NEW_BOOK_AUTHOR_ID = 4;
+    private static final String NEW_BOOK_AUTHOR_ID = "4";
     private static final String NEW_BOOK_AUTHOR_NAME = "Super Author";
-    private static final long NEW_BOOK_GENRE_ID = 2;
+    private static final String NEW_BOOK_GENRE_ID = "2";
     private static final String NEW_BOOK_GENRE_NAME = "Other";
-    private final Author newAuthor = new Author(NEW_BOOK_AUTHOR_ID, NEW_BOOK_AUTHOR_NAME, Collections.emptyList());
-    private final Book newBook = new Book(NEW_BOOK_ID, NEW_BOOK_TITLE, null, newAuthor,
-            new Genre(NEW_BOOK_GENRE_ID, NEW_BOOK_GENRE_NAME));
-    private final Book newBook2 = new Book(NEW_BOOK2_ID, NEW_BOOK_TITLE + "2", null, newAuthor,
-            new Genre(NEW_BOOK_GENRE_ID, NEW_BOOK_GENRE_NAME));
-    private final Comment NEW_BOOK_COMMENT = new Comment(1L, newBook, "my important comment", LocalDate.now());
+    private final Author newAuthor = new Author(NEW_BOOK_AUTHOR_NAME, Collections.emptyList());
+    private final Book newBook = new Book(NEW_BOOK_TITLE, null, newAuthor,
+            new Genre(NEW_BOOK_GENRE_NAME));
+    private final Book newBook2 = new Book( NEW_BOOK_TITLE + "2", null, newAuthor,
+            new Genre(NEW_BOOK_GENRE_NAME));
+    private final Comment NEW_BOOK_COMMENT = new Comment(newBook, "my important comment", LocalDate.now());
 
     @Autowired
     private BookRepository bookRepository;

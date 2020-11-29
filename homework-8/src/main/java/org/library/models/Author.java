@@ -12,15 +12,17 @@ import java.util.List;
 
 @Data
 @ToString(exclude = "books")
-@AllArgsConstructor
-@NoArgsConstructor
 @Document(collection = "authors")
 public class Author {
     @Id
-    private long id;
+    private String id;
     @Field(name = "name")
     private String name;
     @Field(name = "books")
     private List<Book> books;
 
+    public Author(String name, List<Book> books) {
+        this.name = name;
+        this.books = books;
+    }
 }

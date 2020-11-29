@@ -19,14 +19,14 @@ public class AuthorService {
     public void createAuthor(String authorName) {
         authorRepository.findByName(authorName)
                 .orElseThrow(() -> new RuntimeException("Author with name: " + authorName + "' already exist"));
-        Author author = new Author(0, authorName, null);
+        Author author = new Author(authorName, null);
         authorRepository.save(author);
     }
 
     /**
      * Finds by id
      */
-    public Author findById(long id) {
+    public Author findById(String id) {
         return authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Author with id '" + id + "' not exist"));
     }
@@ -41,7 +41,7 @@ public class AuthorService {
     /**
      * Updates author name
      */
-    public void updateName(long id, String name) {
+    public void updateName(String id, String name) {
         final Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Author with id '" + id + "' not exist"));
         author.setName(name);
@@ -51,7 +51,7 @@ public class AuthorService {
     /**
      * Deletes author by id
      */
-    public void deleteAuthor(long id) {
+    public void deleteAuthor(String id) {
         final Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException("Author with id '" + id + "' not exist"));
         authorRepository.delete(author);

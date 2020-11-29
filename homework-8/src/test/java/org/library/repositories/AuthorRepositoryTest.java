@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class AuthorRepositoryTest {
 
     private static final String EXISTING_AUTHOR_NAME = "Zed A. Shaw";
-    private static final Long EXISTING_AUTHOR_ID = 2L;
+    private static final String EXISTING_AUTHOR_ID = "2";
     private static final int STARTED_AUTHOR_COUNT = 4;
 
     @Autowired
@@ -37,7 +37,7 @@ class AuthorRepositoryTest {
     @Order(1)
     void shouldNotAddDuplicatedAuthorName() {
         assertThrows(DataIntegrityViolationException.class, () ->
-                authorRepository.save(new Author(0, EXISTING_AUTHOR_NAME, Collections.emptyList())));
+                authorRepository.save(new Author(EXISTING_AUTHOR_NAME, Collections.emptyList())));
     }
 
     @Test
@@ -62,22 +62,22 @@ class AuthorRepositoryTest {
     @Test
     @Order(4)
     void shouldFindById() {
-        Author newAuthor = new Author(6L, EXISTING_AUTHOR_NAME + 2, Collections.emptyList());
+        Author newAuthor = new Author(EXISTING_AUTHOR_NAME + 2, Collections.emptyList());
         authorRepository.save(newAuthor);
         System.out.println(bookRepository.findAll());
-        assertThat(authorRepository.findById(6L).get().getName()).isEqualTo(newAuthor.getName());
+        assertThat(authorRepository.findById("6").get().getName()).isEqualTo(newAuthor.getName());
     }
 
     @Test
     @Order(5)
     void shouldDeleteById() {
         final List<Author> authorsStart = authorRepository.findAll();
-        Author newAuthor = new Author(6L, EXISTING_AUTHOR_NAME + 2, Collections.emptyList());
-        assertThat(authorsStart.stream().filter(a -> a.getId() == 6L).findFirst().get().getName()).isEqualTo(EXISTING_AUTHOR_NAME + 2);
+        Author newAuthor = new Author(EXISTING_AUTHOR_NAME + 2, Collections.emptyList());
+        assertThat(authorsStart.stream().filter(a -> a.getId().equals("6")).findFirst().get().getName()).isEqualTo(EXISTING_AUTHOR_NAME + 2);
         authorRepository.save(newAuthor);
-        authorRepository.deleteById(6L);
+        authorRepository.deleteById("6");
         final List<Author> authorsEnd = authorRepository.findAll();
-        assertThat(authorsEnd.stream().filter(a -> a.getId() == 6L).count()).isEqualTo(0);
+        assertThat(authorsEnd.stream().filter(a -> a.getId().equals("6")).count()).isEqualTo(0);
     }
 
 }

@@ -23,17 +23,17 @@ class CommentRepositoryTest {
     @Test
     @Order(1)
     void shouldFindById() {
-        Comment comment = new Comment(1L, bookRepository.findById(1L).get(), "New comment text 1", LocalDate.now());
+        Comment comment = new Comment(bookRepository.findById(1L).get(), "New comment text 1", LocalDate.now());
         commentRepository.save(comment);
-        assertThat(commentRepository.findById(1L).get()).isEqualTo(comment);
+        assertThat(commentRepository.findById("1").get()).isEqualTo(comment);
     }
 
     @Test
     @Order(2)
     void shouldDeleteById() {
-        Comment comment = new Comment(2L, bookRepository.findById(1L).get(), "New comment text 2", LocalDate.now());
+        Comment comment = new Comment(bookRepository.findById(1L).get(), "New comment text 2", LocalDate.now());
         commentRepository.save(comment);
-        commentRepository.deleteById(2L);
+        commentRepository.deleteById("2");
         final List<Comment> comments = commentRepository.findAll();
         assertThat(comments).doesNotContain(comment);
     }

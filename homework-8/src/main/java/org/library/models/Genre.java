@@ -8,8 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Document(collection = "genres")
 public class Genre {
     @Id
@@ -17,4 +15,7 @@ public class Genre {
     @Field(name = "name")
     private String name;
 
+    public Genre(String name) {
+        this.name = name;
+    }
 }

@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class GenreRepositoryTest {
 
     private static final String EXISTING_GENRE_NAME = "Other";
-    private static final Long EXISTING_GENRE_ID = 2L;
+    private static final String EXISTING_GENRE_ID = "2";
     private static final int STARTED_GENRE_COUNT = 2;
 
     @Autowired
@@ -32,7 +32,7 @@ class GenreRepositoryTest {
     @Test
     @Order(1)
     void shouldNotAddDuplicatedGenreName() {
-        assertThrows(DataIntegrityViolationException.class, () -> genreRepository.save(new Genre(0, EXISTING_GENRE_NAME)));
+        assertThrows(DataIntegrityViolationException.class, () -> genreRepository.save(new Genre(EXISTING_GENRE_NAME)));
     }
 
 
@@ -51,17 +51,18 @@ class GenreRepositoryTest {
     @Test
     @Order(3)
     void shouldFindById() {
-        Genre newGenre = new Genre(2L, EXISTING_GENRE_NAME + 1);
+        Genre newGenre = new Genre(EXISTING_GENRE_NAME + 1);
         genreRepository.save(newGenre);
-        assertThat(genreRepository.findById(2L).get()).isEqualTo(newGenre);
+        assertThat(genreRepository.findById("2").get()).isEqualTo(newGenre);
     }
 
     @Test
     @Order(4)
     void shouldDeleteById() {
-        Genre newGenre = new Genre(3L, EXISTING_GENRE_NAME + 2);
+        Genre newGenre = new Genre(EXISTING_GENRE_NAME + 2);
+
         genreRepository.save(newGenre);
-        genreRepository.deleteById(4L);
+        genreRepository.deleteById("4");
         final List<Genre> genres = genreRepository.findAll();
         assertThat(genres).doesNotContain(newGenre);
     }

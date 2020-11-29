@@ -10,17 +10,22 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Document(collection = "comments")
 public class Comment {
     @Id
-    private long id;
+    private String id;
     @Field(name = "book")
     private Book book;
     @Field(name = "text")
     private String text;
+
     @Field(name = "date")
     private LocalDate date;
+
+    public Comment(Book book, String text, LocalDate date) {
+        this.book = book;
+        this.text = text;
+        this.date = date;
+    }
 
 }

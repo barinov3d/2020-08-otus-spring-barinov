@@ -24,7 +24,7 @@ public class BookService {
      */
     public void createBook(String title, String authorName, String genreName
     ) {
-        Book book = new Book(0, title, null, authorRepository.findByName(authorName)
+        Book book = new Book(title, null, authorRepository.findByName(authorName)
                 .orElseThrow(() -> new AuthorNotFoundException("Author with name '" + authorName + "' not exist")),
                 genreRepository.findByName(genreName)
                         .orElseThrow(() -> new GenreNotFoundException("Genre with name '" + genreName + "' not exist")));

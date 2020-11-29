@@ -19,14 +19,14 @@ public class GenreService {
     public void createGenre(String genreName) {
         genreRepository.findByName(genreName)
                 .orElseThrow(() -> new RuntimeException("Genre with name: " + genreName + "' already exist"));
-        Genre genre = new Genre(0, genreName);
+        Genre genre = new Genre( genreName);
         genreRepository.save(genre);
     }
 
     /**
      * Finds by id
      */
-    public Genre findById(long id) {
+    public Genre findById(String id) {
         return genreRepository.findById(id).orElseThrow(() -> new GenreNotFoundException("Genre with id '" + id + "' not exist"));
     }
 
@@ -40,7 +40,7 @@ public class GenreService {
     /**
      * Updates genre name
      */
-    public void updateName(long id, String name) {
+    public void updateName(String id, String name) {
         final Genre genre = genreRepository.findById(id)
                 .orElseThrow(() -> new GenreNotFoundException("Genre with id '" + id + "' not exist"));
         genre.setName(name);
@@ -50,7 +50,7 @@ public class GenreService {
     /**
      * Deletes genre by id
      */
-    public void deleteGenre(long id) {
+    public void deleteGenre(String id) {
         final Genre genre = genreRepository.findById(id)
                 .orElseThrow(() -> new GenreNotFoundException("Genre with id '" + id + "' not exist"));
         genreRepository.delete(genre);
