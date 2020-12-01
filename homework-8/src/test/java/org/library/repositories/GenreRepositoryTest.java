@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -17,53 +15,34 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class GenreRepositoryTest {
 
     private static final String EXISTING_GENRE_NAME = "Other";
-    private static final String EXISTING_GENRE_ID = "2";
-    private static final int STARTED_GENRE_COUNT = 2;
 
     @Autowired
     private GenreRepository genreRepository;
 
     @Test
-    @Order(0)
-    void shouldfindAll() {
-        assertThat(genreRepository.findAll().size()).isEqualTo(STARTED_GENRE_COUNT);
-    }
-
-    @Test
     @Order(1)
-    void shouldNotAddDuplicatedGenreName() {
-        assertThrows(DataIntegrityViolationException.class, () -> genreRepository.save(new Genre(EXISTING_GENRE_NAME)));
+    void shouldfindAll() {
+        assertThat(genreRepository.findAll().size()).isEqualTo(2);
     }
-
 
     @Test
     @Order(2)
-    void shouldUpdateNameById() {
-        final String expectedName = EXISTING_GENRE_NAME + " updated";
-        final Genre actualGenre = genreRepository.findByName(EXISTING_GENRE_NAME).get();
-        actualGenre.setName(expectedName);
-        genreRepository.save(actualGenre);
-        final Genre actualAuthor = genreRepository.findById(EXISTING_GENRE_ID).get();
-        assertThat(actualGenre.getName()).isEqualTo(expectedName);
+    void shouldFindById() {
+        Genre genre = genreRepository.save(new Genre("New genre 1"));
+        assertThat(genreRepository.findById(genre.getId()).get()).isEqualTo(genre);
     }
-
 
     @Test
     @Order(3)
-    void shouldFindById() {
-        Genre newGenre = new Genre(EXISTING_GENRE_NAME + 1);
-        genreRepository.save(newGenre);
-        assertThat(genreRepository.findById("2").get()).isEqualTo(newGenre);
+    void shouldDeleteById() {
+        Genre genre = genreRepository.save(new Genre("New genre 2"));
+        genreRepository.deleteById(genre.getId());
+        assertThat(genreRepository.findAll()).doesNotContain(genre);
     }
 
     @Test
     @Order(4)
-    void shouldDeleteById() {
-        Genre newGenre = new Genre(EXISTING_GENRE_NAME + 2);
-
-        genreRepository.save(newGenre);
-        genreRepository.deleteById("4");
-        final List<Genre> genres = genreRepository.findAll();
-        assertThat(genres).doesNotContain(newGenre);
+    void shouldNotAddDuplicatedGenreName() {
+        assertThrows(DataIntegrityViolationException.class, () -> genreRepository.save(new Genre(EXISTING_GENRE_NAME)));
     }
 }

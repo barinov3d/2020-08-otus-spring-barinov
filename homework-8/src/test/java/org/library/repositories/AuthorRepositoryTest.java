@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class AuthorRepositoryTest {
 
     private static final String EXISTING_AUTHOR_NAME = "Zed A. Shaw";
-    private static final String EXISTING_AUTHOR_ID = "2";
     private static final int STARTED_AUTHOR_COUNT = 4;
 
     @Autowired
@@ -34,50 +32,48 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    @Order(1)
-    void shouldNotAddDuplicatedAuthorName() {
-        assertThrows(DataIntegrityViolationException.class, () ->
-                authorRepository.save(new Author(EXISTING_AUTHOR_NAME, Collections.emptyList())));
-    }
-
-    @Test
     @Order(2)
     void shouldFindAuthorBooks() {
         Author author = authorRepository.findByName(EXISTING_AUTHOR_NAME).get();
         List<Book> books = author.getBooks();
-        assertThat(books.get(0).getTitle()).isEqualTo(bookRepository.findById(EXISTING_AUTHOR_ID).get().getTitle());
+        assertThat(books.get(0))
+                .isEqualTo(bookRepository.findBookByAuthorAndTitle(author, "Learn Python the Hard Way").get());
     }
 
     @Test
     @Order(3)
     void shouldUpdateNameById() {
+        var existingAuthorId = authorRepository.findByName(EXISTING_AUTHOR_NAME).get().getId();
         final String expectedName = EXISTING_AUTHOR_NAME + " updated";
         final Author author = authorRepository.findByName(EXISTING_AUTHOR_NAME).get();
         author.setName(expectedName);
         authorRepository.save(author);
-        final Author actualAuthor = authorRepository.findById(EXISTING_AUTHOR_ID).get();
+        final Author actualAuthor = authorRepository.findById(existingAuthorId).get();
         assertThat(actualAuthor.getName()).isEqualTo(expectedName);
     }
 
     @Test
     @Order(4)
     void shouldFindById() {
-        Author newAuthor = new Author(EXISTING_AUTHOR_NAME + 2, Collections.emptyList());
-        authorRepository.save(newAuthor);
-        System.out.println(bookRepository.findAll());
-        assertThat(authorRepository.findById("6").get().getName()).isEqualTo(newAuthor.getName());
+        Author authorFromRepo = authorRepository.save(new Author(EXISTING_AUTHOR_NAME + 2));
+        final String authorId = authorFromRepo.getId();
+        assertThat(authorRepository.findById(authorId).get()).isEqualTo(authorFromRepo);
     }
 
     @Test
     @Order(5)
     void shouldDeleteById() {
-        final List<Author> authorsStart = authorRepository.findAll();
-        Author newAuthor = new Author(EXISTING_AUTHOR_NAME + 2, Collections.emptyList());
-        assertThat(authorsStart.stream().filter(a -> a.getId().equals("6")).findFirst().get().getName()).isEqualTo(EXISTING_AUTHOR_NAME + 2);
-        authorRepository.save(newAuthor);
-        authorRepository.deleteById("6");
-        final List<Author> authorsEnd = authorRepository.findAll();
-        assertThat(authorsEnd.stream().filter(a -> a.getId().equals("6")).count()).isEqualTo(0);
+        final String authorName = EXISTING_AUTHOR_NAME + 2;
+        final Author authorFromRepo = authorRepository.save(new Author(authorName));
+        authorRepository.deleteById(authorFromRepo.getId());
+        assertThat(authorRepository.findAll()).doesNotContain(authorFromRepo);
     }
 
+
+    @Test
+    @Order(6)
+    void shouldNotAddDuplicatedAuthorName() {
+        assertThrows(DataIntegrityViolationException.class, () ->
+                authorRepository.save(new Author(EXISTING_AUTHOR_NAME)));
+    }
 }

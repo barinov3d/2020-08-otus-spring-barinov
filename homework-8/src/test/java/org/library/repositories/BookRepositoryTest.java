@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,24 +21,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class BookRepositoryTest {
     private static final long STARTED_BOOKS_COUNT = 3;
-    private static final String NEW_BOOK_ID = "4";
-    private static final String NEW_BOOK2_ID = "5";
     private static final String NEW_BOOK_TITLE = "Thinking in java";
-    private static final String NEW_BOOK_AUTHOR_ID = "4";
-    private static final String NEW_BOOK_AUTHOR_NAME = "Super Author";
-    private static final String NEW_BOOK_GENRE_ID = "2";
     private static final String NEW_BOOK_GENRE_NAME = "Other";
-    private final Author newAuthor = new Author(NEW_BOOK_AUTHOR_NAME, Collections.emptyList());
-    private final Book newBook = new Book(NEW_BOOK_TITLE, null, newAuthor,
+    private final String NEW_AUTHOR_NAME = "Bruce Eckel";
+    private final Book newBook = new Book(NEW_BOOK_TITLE, null,
             new Genre(NEW_BOOK_GENRE_NAME));
-    private final Book newBook2 = new Book( NEW_BOOK_TITLE + "2", null, newAuthor,
+    private final Book newBook2 = new Book(NEW_BOOK_TITLE + "2", null,
             new Genre(NEW_BOOK_GENRE_NAME));
-    private final Comment NEW_BOOK_COMMENT = new Comment(newBook, "my important comment", LocalDate.now());
+    private final Comment NEW_BOOK_COMMENT = new Comment("my important comment", LocalDate.now());
 
     @Autowired
     private BookRepository bookRepository;
     @Autowired
     private AuthorRepository authorRepository;
+
+    @AfterEach
+    void afterEach() {
+        if (bookRepository.findAll().contains(newBook)) {
+            bookRepository.delete(newBook);
+        }
+        if (bookRepository.findAll().contains(newBook2)) {
+            bookRepository.delete(newBook2);
+        }
+    }
 
     @Test
     @Order(1)
@@ -56,42 +60,44 @@ class BookRepositoryTest {
     @Test
     @Order(3)
     void shouldAddSeveralBooks() {
-        System.out.println(bookRepository.findAll());
-        bookRepository.save(newBook);
-        System.out.println(bookRepository.findAll());
-        bookRepository.save(newBook2);
-        assertThat(bookRepository.findById(NEW_BOOK_ID)).get().isEqualTo(newBook);
-        assertThat(bookRepository.findById(NEW_BOOK2_ID)).get().isEqualTo(newBook2);
+        Author author = authorRepository.save(new Author(NEW_AUTHOR_NAME));
+        newBook.setAuthor(author);
+        newBook2.setAuthor(author);
+        Book book1 = bookRepository.save(newBook);
+        Book book2 = bookRepository.save(newBook2);
+        assertThat(bookRepository.findById(book1.getId())).get().isEqualTo(book1);
+        assertThat(bookRepository.findById(book2.getId())).get().isEqualTo(book2);
     }
 
     @Test
     @Order(3)
     void shouldFindAllByAuthors() {
-        assertThat(bookRepository.findAllByAuthor(newAuthor).size()).isEqualTo(2);
+        assertThat(bookRepository.findAllByAuthor(
+                authorRepository.findByName(NEW_AUTHOR_NAME).get()).size()).isEqualTo(2);
     }
 
     @Test
     @Order(5)
     void shouldFindById() {
-        assertThat(bookRepository.findById(NEW_BOOK_ID).get()).isEqualTo(newBook);
+        Book book1 = bookRepository.save(newBook);
+        assertThat(bookRepository.findById(book1.getId()).get()).isEqualTo(book1);
     }
 
     @Test
     @Order(6)
     void shouldUpdateTitle() {
         final String expectedTitle = NEW_BOOK_TITLE + " updated";
-        final Book book = bookRepository.findBookByAuthorAndTitle(authorRepository.findByName(NEW_BOOK_AUTHOR_NAME).get(), NEW_BOOK_TITLE).get();
+        final Book book = bookRepository.findBookByAuthorAndTitle(authorRepository.findByName(NEW_AUTHOR_NAME).get(), NEW_BOOK_TITLE).get();
         book.setTitle(expectedTitle);
         bookRepository.save(book);
-        final Book actualBook = bookRepository.findById(NEW_BOOK_ID).get();
-        assertThat(actualBook).isEqualTo(book);
+        assertThat(bookRepository.findById(book.getId()).get()).isEqualTo(book);
     }
 
     @Test
     @Order(8)
     void shouldDeleteById() {
-        bookRepository.save(newBook);
-        bookRepository.deleteById(NEW_BOOK_ID);
+        Book book1 = bookRepository.save(newBook);
+        bookRepository.deleteById(book1.getId());
         final List<Book> books = bookRepository.findAll();
         assertThat(books).doesNotContain(newBook);
     }
@@ -100,8 +106,8 @@ class BookRepositoryTest {
     @Order(9)
     void shouldAlsoUpdateAuthorWhenBookAdded() {
         bookRepository.save(newBook);
-        final Author author = authorRepository.findByName(NEW_BOOK_AUTHOR_NAME).get();
-        System.out.println(author);
+        final Author author = authorRepository.findByName(NEW_AUTHOR_NAME).get();
+        System.out.println(author.getBooks());
         assertThat(author.getBooks().size()).isEqualTo(2);
     }
 

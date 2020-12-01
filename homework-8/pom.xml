@@ -16,6 +16,7 @@
 
     <properties>
         <java.version>11</java.version>
+        <mongock.version>4.1.17</mongock.version>
     </properties>
 
     <dependencies>
@@ -31,6 +32,20 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.cloudyrock.mongock</groupId>
+            <artifactId>mongock-spring-v5</artifactId>
+            <version>${mongock.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.cloudyrock.mongock</groupId>
+            <artifactId>mongodb-springdata-v3-driver</artifactId>
+            <version>${mongock.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.shell</groupId>

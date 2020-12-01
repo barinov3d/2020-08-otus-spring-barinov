@@ -17,9 +17,10 @@ public class AuthorService {
      * Creates author
      */
     public void createAuthor(String authorName) {
-        authorRepository.findByName(authorName)
-                .orElseThrow(() -> new RuntimeException("Author with name: " + authorName + "' already exist"));
-        Author author = new Author(authorName, null);
+        authorRepository.findByName(authorName).ifPresent(s -> {
+            throw new RuntimeException("Author with name: " + authorName + "' already exist");
+        });
+        Author author = new Author(authorName);
         authorRepository.save(author);
     }
 

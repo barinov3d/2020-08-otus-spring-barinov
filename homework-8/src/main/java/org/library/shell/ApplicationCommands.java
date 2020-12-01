@@ -43,7 +43,7 @@ public class ApplicationCommands {
      * Finds by id
      */
     @ShellMethod(value = "book --find -id 1", key = {"book --find"})
-    public Book findBookById(@ShellOption(value = {"-id"}) long id) {
+    public Book findBookById(@ShellOption(value = {"-id"}) String id) {
         return bookService.findById(id);
     }
 
@@ -59,7 +59,7 @@ public class ApplicationCommands {
      * Updates book title
      */
     @ShellMethod(value = "book --update -id 1 -title 'Updated title'", key = {"book --update"})
-    public void updateTitle(@ShellOption(value = {"-id"}) long id,
+    public void updateTitle(@ShellOption(value = {"-id"}) String id,
                             @ShellOption(value = {"-title"}) String title) {
         bookService.updateTitle(id, title);
     }
@@ -68,7 +68,7 @@ public class ApplicationCommands {
      * Find all author books
      */
     @ShellMethod(value = "book --delete -id 1 ", key = {"book --delete"})
-    public void deleteBook(@ShellOption(value = {"-id"}) long id) {
+    public void deleteBook(@ShellOption(value = {"-id"}) String id) {
         bookService.deleteBook(id);
     }
 
@@ -118,7 +118,7 @@ public class ApplicationCommands {
      */
     @ShellMethod(value = "comment --create -text 'comment text' -book_id 1",
             key = {"comment --create"})
-    public void createComment(@ShellOption(value = {"-text"}) String commentText, @ShellOption(value = {"-book_id"}) long bookId) {
+    public void createComment(@ShellOption(value = {"-text"}) String commentText, @ShellOption(value = {"-book_id"}) String bookId) {
         commentService.createComment(commentText, bookId);
     }
 

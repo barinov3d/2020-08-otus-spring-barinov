@@ -1,10 +1,14 @@
 package org.library.models;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -15,19 +19,23 @@ import java.util.List;
 public class Book {
     @Id
     private String id;
+
     @Field(name = "title")
     private String title;
+
     @Field(name = "comments")
-    private List<Comment> comments;
+    @DBRef()
+    private List<Comment> comments = new ArrayList<>();
+
     @Field(name = "author")
+    @DBRef()
     private Author author;
 
     @Field(name = "genre")
     private Genre genre;
 
-    public Book(String title, List<Comment> comments, Author author, Genre genre) {
+    public Book(String title, Author author, Genre genre) {
         this.title = title;
-        this.comments = comments;
         this.author = author;
         this.genre = genre;
     }

@@ -17,9 +17,10 @@ public class GenreService {
      * Creates genre
      */
     public void createGenre(String genreName) {
-        genreRepository.findByName(genreName)
-                .orElseThrow(() -> new RuntimeException("Genre with name: " + genreName + "' already exist"));
-        Genre genre = new Genre( genreName);
+        genreRepository.findByName(genreName).ifPresent(s -> {
+            throw new RuntimeException("Genre with name: " + genreName + "' already exist");
+        });
+        Genre genre = new Genre(genreName);
         genreRepository.save(genre);
     }
 
@@ -56,7 +57,7 @@ public class GenreService {
         genreRepository.delete(genre);
     }
 
-    private void genreNotFound(long id) {
+    private void genreNotFound(String id) {
         throw new GenreNotFoundException("Genre with id '" + id + "' not exist");
     }
 

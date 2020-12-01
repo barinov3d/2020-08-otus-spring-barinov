@@ -20,9 +20,10 @@ public class CommentService {
     /**
      * Creates comment
      */
-    public void createComment(String commentText, long bookId) {
-        Comment comment = new Comment(bookRepository
-                .findById(bookId).orElseThrow(() -> new BookNotFoundException("Book with id '" + bookId + "' not exist")), commentText, LocalDate.now());
+    public void createComment(String commentText, String bookId) {
+        Comment comment = new Comment(commentText, LocalDate.now());
+        comment.setBook(bookRepository.findById(bookId).orElseThrow(() ->
+                new BookNotFoundException("Book with id '" + bookId + "' not exist")));
         commentRepository.save(comment);
     }
 
@@ -60,11 +61,11 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-    private void commentNotFound(long id) {
+    private void commentNotFound(String id) {
         throw new CommentNotFoundException("Comment with id '" + id + "' not exist");
     }
 
-    private void bookNotFound(long id) {
+    private void bookNotFound(String id) {
         throw new BookNotFoundException("Book with id '" + id + "' not exist");
     }
 }

@@ -5,5 +5,11 @@ spring:
   shell:
     interactive:
       enabled: false
-  jpa:
-    show-sql: true
+  data:
+    mongodb:
+      database: library
+mongock:
+  #runner-type: "ApplicationRunner" # default
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - org.library.mongock.changelog
