@@ -4,7 +4,7 @@ import org.junit.jupiter.api.*;
 import org.library.models.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -43,6 +43,6 @@ class GenreRepositoryTest {
     @Test
     @Order(4)
     void shouldNotAddDuplicatedGenreName() {
-        assertThrows(DataIntegrityViolationException.class, () -> genreRepository.save(new Genre(EXISTING_GENRE_NAME)));
+        assertThrows(DuplicateKeyException.class, () -> genreRepository.save(new Genre(EXISTING_GENRE_NAME)));
     }
 }

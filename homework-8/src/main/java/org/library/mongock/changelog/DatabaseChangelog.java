@@ -30,15 +30,19 @@ public class DatabaseChangelog {
         final Author author2 = new Author("Zed A. Shaw");
         final Author author3 = new Author("Alfred Van Vogt");
         final Author author4 = new Author("Super Author");
+        final Author author5 = new Author("Super Author");
         authorRepository.save(author1);
         authorRepository.save(author2);
         authorRepository.save(author3);
         authorRepository.save(author4);
+        authorRepository.save(author5);
 
         Genre genre1 = new Genre("Сomputer science");
         Genre genre2 = new Genre("Other");
+        Genre genre3 = new Genre("Other");
         genreRepository.save(genre1);
         genreRepository.save(genre2);
+        genreRepository.save(genre3);
 
         Comment comment1 = new Comment("It's an interesting book", LocalDate.now());
         Comment comment2 = new Comment("It's a great book!", LocalDate.now());

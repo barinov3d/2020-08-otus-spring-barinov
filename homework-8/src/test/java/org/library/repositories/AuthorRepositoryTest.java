@@ -5,7 +5,7 @@ import org.library.models.Author;
 import org.library.models.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.util.List;
 
@@ -73,7 +73,7 @@ class AuthorRepositoryTest {
     @Test
     @Order(6)
     void shouldNotAddDuplicatedAuthorName() {
-        assertThrows(DataIntegrityViolationException.class, () ->
+        assertThrows(DuplicateKeyException.class, () ->
                 authorRepository.save(new Author(EXISTING_AUTHOR_NAME)));
     }
 }
