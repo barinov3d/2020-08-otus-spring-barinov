@@ -27,11 +27,11 @@ public class BookService {
     public Book createBook(String title, String authorName, String genreName
     ) {
         final Optional<Author> optionalAuthor = authorRepository.findByName(authorName);
-        Book book = new Book(title, optionalAuthor
-                .orElseThrow(() -> new AuthorNotFoundException("Author with name '" + authorName + "' not exist")),
+        Book book = new Book(title,
                 genreRepository.findByName(genreName)
                         .orElseThrow(() -> new GenreNotFoundException("Genre with name '" + genreName + "' not exist")));
-        final Author author = optionalAuthor.get();
+        final Author author = optionalAuthor
+                .orElseThrow(() -> new AuthorNotFoundException("Author with name '" + authorName + "' not exist"));
         final List<Book> authorBooks = author.getBooks();
         bookRepository.save(book);
         authorBooks.add(book);

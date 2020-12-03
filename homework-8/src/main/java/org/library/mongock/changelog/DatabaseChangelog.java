@@ -23,33 +23,34 @@ public class DatabaseChangelog {
         db.drop();
     }
 
-    @ChangeSet(order = "002", id = "insertData", author = "stvort")
+    @ChangeSet(order = "002", id = "insertData", author = "dmitry")
     public void insertData(AuthorRepository authorRepository, GenreRepository genreRepository,
                            BookRepository bookRepository, CommentRepository commentRepository) {
         final Author author1 = new Author("Bruce Eckel");
         final Author author2 = new Author("Zed A. Shaw");
         final Author author3 = new Author("Alfred Van Vogt");
         final Author author4 = new Author("Super Author");
-        final Author author5 = new Author("Super Author");
+        //final Author author5 = new Author("Super Author");
         authorRepository.save(author1);
         authorRepository.save(author2);
         authorRepository.save(author3);
         authorRepository.save(author4);
-        authorRepository.save(author5);
+        //authorRepository.save(author5);
 
         Genre genre1 = new Genre("Сomputer science");
         Genre genre2 = new Genre("Other");
-        Genre genre3 = new Genre("Other");
+        //Genre genre3 = new Genre("Other");
         genreRepository.save(genre1);
         genreRepository.save(genre2);
-        genreRepository.save(genre3);
+        //genreRepository.save(genre3);
 
         Comment comment1 = new Comment("It's an interesting book", LocalDate.now());
         Comment comment2 = new Comment("It's a great book!", LocalDate.now());
         commentRepository.save(comment1);
         commentRepository.save(comment2);
 
-        Book book1 = new Book("Thinking in java", author1, genre1);
+        Book book1 = new Book("Thinking in java", genre1);
+        book1.setAuthor(author1);
         comment1.setBook(book1);
         final List<Book> author1Books = author1.getBooks();
         bookRepository.save(book1);
@@ -58,7 +59,8 @@ public class DatabaseChangelog {
         authorRepository.save(author1);
         book1.setComments(List.of(comment1));
 
-        Book book2 = new Book("Learn Python the Hard Way", author2, genre1);
+        Book book2 = new Book("Learn Python the Hard Way", genre1);
+        book2.setAuthor(author2);
         comment2.setBook(book2);
         final List<Book> author2Books = author2.getBooks();
         bookRepository.save(book2);
@@ -67,7 +69,8 @@ public class DatabaseChangelog {
         authorRepository.save(author2);
         book2.setComments(List.of(comment2));
 
-        Book book3 = new Book("The Monster", author3, genre2);
+        Book book3 = new Book("The Monster", genre2);
+        book3.setAuthor(author3);
         final List<Book> author3Books = author3.getBooks();
         bookRepository.save(book3);
         author3Books.add(book3);
@@ -77,5 +80,6 @@ public class DatabaseChangelog {
         bookRepository.save(book1);
         bookRepository.save(book2);
         bookRepository.save(book3);
+        System.out.println();
     }
 }

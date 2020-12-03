@@ -34,9 +34,8 @@ public class Book {
     @Field(name = "genre")
     private Genre genre;
 
-    public Book(String title, Author author, Genre genre) {
+    public Book(String title, Genre genre) {
         this.title = title;
-        this.author = author;
         this.genre = genre;
     }
 

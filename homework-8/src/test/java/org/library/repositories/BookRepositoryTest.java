@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,16 +20,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class BookRepositoryTest {
     private static final long STARTED_BOOKS_COUNT = 3;
     private static final String NEW_BOOK_TITLE = "Thinking in java";
     private static final String NEW_BOOK_GENRE_NAME = "Other";
     private final String NEW_AUTHOR_NAME = "Bruce Eckel";
-    private final Book newBook = new Book(NEW_BOOK_TITLE, null,
-            new Genre(NEW_BOOK_GENRE_NAME));
-    private final Book newBook2 = new Book(NEW_BOOK_TITLE + "2", null,
-            new Genre(NEW_BOOK_GENRE_NAME));
-    private final Comment NEW_BOOK_COMMENT = new Comment("my important comment", LocalDate.now());
+    private final Book newBook = new Book(NEW_BOOK_TITLE, new Genre(NEW_BOOK_GENRE_NAME));
+    private final Book newBook2 = new Book(NEW_BOOK_TITLE + "2", new Genre(NEW_BOOK_GENRE_NAME));
 
     @Autowired
     private BookRepository bookRepository;
