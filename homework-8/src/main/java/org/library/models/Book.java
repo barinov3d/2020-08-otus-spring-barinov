@@ -23,13 +23,12 @@ public class Book {
     @Field(name = "title")
     private String title;
 
-    @Field(name = "comments")
-    @DBRef()
-    private List<Comment> comments = new ArrayList<>();
-
     @Field(name = "author")
-    @DBRef()
+    @DBRef
     private Author author;
+
+    @Field(name = "comments")
+    private List<Comment> comments = new ArrayList<>();
 
     @Field(name = "genre")
     private Genre genre;

@@ -3,7 +3,6 @@ package org.library.repositories;
 import org.junit.jupiter.api.*;
 import org.library.models.Author;
 import org.library.models.Book;
-import org.library.models.Comment;
 import org.library.models.Genre;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -11,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class BookRepositoryTest {
     private static final long STARTED_BOOKS_COUNT = 3;
     private static final String NEW_BOOK_TITLE = "Thinking in java";
@@ -34,32 +32,20 @@ class BookRepositoryTest {
     @Autowired
     private AuthorRepository authorRepository;
 
-    @AfterEach
-    void afterEach() {
-        if (bookRepository.findAll().contains(newBook)) {
-            bookRepository.delete(newBook);
-        }
-        if (bookRepository.findAll().contains(newBook2)) {
-            bookRepository.delete(newBook2);
-        }
-    }
-
     @Test
-    @Order(1)
     void shouldReturnTotalCount() {
         assertThat(bookRepository.count()).isEqualTo(STARTED_BOOKS_COUNT);
     }
 
     @Test
-    @Order(2)
     void shouldFindAll() {
         assertThat(bookRepository.findAll().size()).isEqualTo(STARTED_BOOKS_COUNT);
     }
 
     @Test
-    @Order(3)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldAddSeveralBooks() {
-        Author author = authorRepository.save(new Author(NEW_AUTHOR_NAME));
+        Author author = authorRepository.findByName(NEW_AUTHOR_NAME).orElseThrow(AssertionError::new);
         newBook.setAuthor(author);
         newBook2.setAuthor(author);
         Book book1 = bookRepository.save(newBook);
@@ -69,21 +55,21 @@ class BookRepositoryTest {
     }
 
     @Test
-    @Order(3)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldFindAllByAuthors() {
-        assertThat(bookRepository.findAllByAuthor(
-                authorRepository.findByName(NEW_AUTHOR_NAME).get()).size()).isEqualTo(2);
+        assertThat(bookRepository.findAllByAuthor(authorRepository.findByName(NEW_AUTHOR_NAME).get()).size()).isEqualTo(2);
     }
 
     @Test
-    @Order(5)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldFindById() {
         Book book1 = bookRepository.save(newBook);
         assertThat(bookRepository.findById(book1.getId()).get()).isEqualTo(book1);
     }
 
+
     @Test
-    @Order(6)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldUpdateTitle() {
         final String expectedTitle = NEW_BOOK_TITLE + " updated";
         final Book book = bookRepository.findBookByAuthorAndTitle(authorRepository.findByName(NEW_AUTHOR_NAME).get(), NEW_BOOK_TITLE).get();
@@ -92,8 +78,9 @@ class BookRepositoryTest {
         assertThat(bookRepository.findById(book.getId()).get()).isEqualTo(book);
     }
 
+
     @Test
-    @Order(8)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldDeleteById() {
         Book book1 = bookRepository.save(newBook);
         bookRepository.deleteById(book1.getId());
@@ -102,8 +89,9 @@ class BookRepositoryTest {
     }
 
     @Test
-    @Order(9)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldAlsoUpdateAuthorWhenBookAdded() {
+        newBook.setAuthor(authorRepository.findByName(NEW_AUTHOR_NAME).orElseThrow(AssertionError::new));
         bookRepository.save(newBook);
         final Author author = authorRepository.findByName(NEW_AUTHOR_NAME).get();
         System.out.println(author.getBooks());

@@ -2,10 +2,9 @@ package org.library.repositories;
 
 import org.junit.jupiter.api.*;
 import org.library.models.Genre;
+import org.library.services.exceptions.DuplicateGenreNameException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.test.annotation.DirtiesContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class GenreRepositoryTest {
 
     private static final String EXISTING_GENRE_NAME = "Other";
@@ -45,6 +43,6 @@ class GenreRepositoryTest {
     @Test
     @Order(4)
     void shouldNotAddDuplicatedGenreName() {
-        assertThrows(DuplicateKeyException.class, () -> genreRepository.save(new Genre(EXISTING_GENRE_NAME)));
+        assertThrows(DuplicateGenreNameException.class, () -> genreRepository.save(new Genre(EXISTING_GENRE_NAME)));
     }
 }

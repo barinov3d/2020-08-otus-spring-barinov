@@ -3,6 +3,7 @@ package org.library.repositories;
 import org.junit.jupiter.api.*;
 import org.library.models.Author;
 import org.library.models.Book;
+import org.library.services.exceptions.DuplicateAuthorNameException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
@@ -16,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class AuthorRepositoryTest {
 
     private static final String EXISTING_AUTHOR_NAME = "Zed A. Shaw";
@@ -28,13 +28,11 @@ class AuthorRepositoryTest {
     private BookRepository bookRepository;
 
     @Test
-    @Order(0)
     void shouldfindAll() {
         assertThat(authorRepository.findAll().size()).isEqualTo(STARTED_AUTHOR_COUNT);
     }
 
     @Test
-    @Order(2)
     void shouldFindAuthorBooks() {
         Author author = authorRepository.findByName(EXISTING_AUTHOR_NAME).get();
         List<Book> books = author.getBooks();
@@ -43,7 +41,7 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    @Order(3)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldUpdateNameById() {
         var existingAuthorId = authorRepository.findByName(EXISTING_AUTHOR_NAME).get().getId();
         final String expectedName = EXISTING_AUTHOR_NAME + " updated";
@@ -55,7 +53,6 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    @Order(4)
     void shouldFindById() {
         Author authorFromRepo = authorRepository.save(new Author(EXISTING_AUTHOR_NAME + 2));
         final String authorId = authorFromRepo.getId();
@@ -63,9 +60,9 @@ class AuthorRepositoryTest {
     }
 
     @Test
-    @Order(5)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldDeleteById() {
-        final String authorName = EXISTING_AUTHOR_NAME + 2;
+        final String authorName = EXISTING_AUTHOR_NAME + 3;
         final Author authorFromRepo = authorRepository.save(new Author(authorName));
         authorRepository.deleteById(authorFromRepo.getId());
         assertThat(authorRepository.findAll()).doesNotContain(authorFromRepo);
@@ -73,9 +70,9 @@ class AuthorRepositoryTest {
 
 
     @Test
-    @Order(6)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldNotAddDuplicatedAuthorName() {
-        assertThrows(DuplicateKeyException.class, () ->
+        assertThrows(DuplicateAuthorNameException.class, () ->
                 authorRepository.save(new Author(EXISTING_AUTHOR_NAME)));
     }
 }

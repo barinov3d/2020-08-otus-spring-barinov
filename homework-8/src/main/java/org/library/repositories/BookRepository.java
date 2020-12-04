@@ -1,21 +1,9 @@
 package org.library.repositories;
 
-import org.library.models.Author;
 import org.library.models.Book;
+import org.library.repositories.impl.BookCustomizeRepository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface BookRepository extends MongoRepository<Book, String> {
-
-    List<Book> findAllByAuthor(Author author);
-
-    Optional<Book> findBookByAuthorAndTitle(Author author, String title);
-
-    List<Book> findAll();
-
-    Optional<Book> findById(String id);
-
+public interface BookRepository extends MongoRepository<Book, String>, BookCustomizeRepository<Book, String> {
 
 }

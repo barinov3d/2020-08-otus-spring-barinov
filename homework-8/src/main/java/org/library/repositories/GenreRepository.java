@@ -1,12 +1,9 @@
 package org.library.repositories;
 
 import org.library.models.Genre;
+import org.library.repositories.impl.GenreCustomizeRepository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.Optional;
-
-public interface GenreRepository extends MongoRepository<Genre, String> {
-
-    Optional<Genre> findByName(String name);
+public interface GenreRepository extends MongoRepository<Genre, String>, GenreCustomizeRepository<Genre, String> {
 
 }

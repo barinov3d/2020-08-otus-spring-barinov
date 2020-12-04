@@ -22,8 +22,6 @@ public class CommentService {
      */
     public void createComment(String commentText, String bookId) {
         Comment comment = new Comment(commentText, LocalDate.now());
-        comment.setBook(bookRepository.findById(bookId).orElseThrow(() ->
-                new BookNotFoundException("Book with id '" + bookId + "' not exist")));
         commentRepository.save(comment);
     }
 

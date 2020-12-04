@@ -11,7 +11,6 @@ spring:
   data:
     mongodb:
       database: library
-      auto-index-creation: true
 mongock:
   #runner-type: "ApplicationRunner" # default
   runner-type: "InitializingBean"
