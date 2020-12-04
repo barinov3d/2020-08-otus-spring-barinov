@@ -13,6 +13,7 @@ import org.library.repositories.CommentRepository;
 import org.library.repositories.GenreRepository;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @ChangeLog
@@ -26,14 +27,6 @@ public class DatabaseChangelog {
     @ChangeSet(order = "002", id = "insertData", author = "dmitry")
     public void insertData(AuthorRepository authorRepository, GenreRepository genreRepository,
                            BookRepository bookRepository, CommentRepository commentRepository) {
-        final Author author1 = new Author("Bruce Eckel");
-        final Author author2 = new Author("Zed A. Shaw");
-        final Author author3 = new Author("Alfred Van Vogt");
-        final Author author4 = new Author("Super Author");
-        authorRepository.save(author1);
-        authorRepository.save(author2);
-        authorRepository.save(author3);
-        authorRepository.save(author4);
 
         Genre genre1 = new Genre("Сomputer science");
         Genre genre2 = new Genre("Other");
@@ -42,34 +35,37 @@ public class DatabaseChangelog {
 
         Comment comment1 = new Comment("It's an interesting book", LocalDate.now());
         Comment comment2 = new Comment("It's a great book!", LocalDate.now());
+        Comment comment3 = new Comment("Boring book...", LocalDate.now());
+        Comment comment4 = new Comment("Pretty nice", LocalDate.now());
         commentRepository.save(comment1);
         commentRepository.save(comment2);
+        commentRepository.save(comment3);
+        commentRepository.save(comment4);
 
-        final Book book1 = new Book("Thinking in java", genre1);
-        book1.setAuthor(author1);
-        final List<Book> author1Books = author1.getBooks();
-        bookRepository.save(book1);
-        author1Books.add(book1);
-        author1.setBooks(author1Books);
+        final Book book1 = new Book("Thinking in java", genre1, List.of(comment1, comment2));
+        final Book book2 = new Book("Learn Python the Hard Way", genre1, List.of(comment1, comment3, comment4));
+        final Book book3 = new Book("The Monster", genre2, Collections.emptyList());
+
+        final Author author1 = new Author("Bruce Eckel", List.of(book1));
+        final Author author2 = new Author("Zed A. Shaw", List.of(book2));
+        final Author author3 = new Author("Alfred Van Vogt", List.of(book3));
+        final Author author4 = new Author("Super Author");
+
         authorRepository.save(author1);
-        book1.setComments(List.of(comment1));
-
-        final Book book2 = new Book("Learn Python the Hard Way", genre1);
-        book2.setAuthor(author2);
-        final List<Book> author2Books = author2.getBooks();
-        bookRepository.save(book2);
-        author2Books.add(book2);
-        author2.setBooks(author2Books);
         authorRepository.save(author2);
-        book2.setComments(List.of(comment2));
-
-        final Book book3 = new Book("The Monster", genre2);
-        book3.setAuthor(author1);
-        final List<Book> author3Books = author3.getBooks();
-        bookRepository.save(book3);
-        author3Books.add(book3);
-        author3.setBooks(author3Books);
         authorRepository.save(author3);
+        authorRepository.save(author4);
+
+
+/*
+        author1.setBooks(List.of(book1));
+        author2.setBooks(List.of(book2));
+        author3.setBooks(List.of(book3));
+
+        authorRepository.save(author1);
+        authorRepository.save(author2);
+        authorRepository.save(author3);
+*/
 
         bookRepository.save(book1);
         bookRepository.save(book2);

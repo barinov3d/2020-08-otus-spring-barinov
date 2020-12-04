@@ -1,4 +1,4 @@
-package org.library.services.exceptions;
+package org.library.exceptions;
 
 public class GenreNotFoundException extends RepositoryException {
     public GenreNotFoundException(String message) {

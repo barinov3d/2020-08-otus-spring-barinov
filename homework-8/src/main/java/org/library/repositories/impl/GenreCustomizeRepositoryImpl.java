@@ -1,8 +1,7 @@
 package org.library.repositories.impl;
 
+import org.library.exceptions.DuplicateGenreNameException;
 import org.library.models.Genre;
-import org.library.services.exceptions.DuplicateGenreNameException;
-import org.library.services.exceptions.GenreNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -33,7 +32,7 @@ public class GenreCustomizeRepositoryImpl<T, ID> implements GenreCustomizeReposi
     @Override
     public <S extends T> S save(S entity) {
         Genre genre = (Genre) entity;
-        if(genre.getId() == null) {
+        if (genre.getId() == null) {
             findByName(genre.getName())
                     .ifPresent(g -> {
                         throw new DuplicateGenreNameException("Genre with name '" + genre.getName() + "' is already define in the scope");

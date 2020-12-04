@@ -2,7 +2,6 @@ package org.library.repositories.impl;
 
 import org.library.models.Author;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface AuthorCustomizeRepository<T, ID> {

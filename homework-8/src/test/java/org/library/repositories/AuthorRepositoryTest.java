@@ -1,12 +1,11 @@
 package org.library.repositories;
 
 import org.junit.jupiter.api.*;
+import org.library.exceptions.DuplicateAuthorNameException;
 import org.library.models.Author;
 import org.library.models.Book;
-import org.library.services.exceptions.DuplicateAuthorNameException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
+@DataMongoTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AuthorRepositoryTest {
@@ -68,11 +67,19 @@ class AuthorRepositoryTest {
         assertThat(authorRepository.findAll()).doesNotContain(authorFromRepo);
     }
 
-
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldNotAddDuplicatedAuthorName() {
         assertThrows(DuplicateAuthorNameException.class, () ->
                 authorRepository.save(new Author(EXISTING_AUTHOR_NAME)));
     }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    void shouldDeleteAllBooksIfAuthorDeleted() {
+        authorRepository.delete(authorRepository.findByName(EXISTING_AUTHOR_NAME).orElseThrow(AssertionError::new));
+
+    }
+
+
 }

@@ -1,8 +1,7 @@
 package org.library.repositories.impl;
 
+import org.library.exceptions.DuplicateAuthorNameException;
 import org.library.models.Author;
-import org.library.services.exceptions.DuplicateAuthorNameException;
-import org.library.services.exceptions.DuplicateGenreNameException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

@@ -3,13 +3,13 @@ package org.library.repositories;
 import org.junit.jupiter.api.*;
 import org.library.models.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@DataMongoTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CommentRepositoryTest {
@@ -22,7 +22,7 @@ class CommentRepositoryTest {
     @Test
     @Order(1)
     void shouldfindAll() {
-        assertThat(commentRepository.findAll().size()).isEqualTo(2);
+        assertThat(commentRepository.findAll().size()).isEqualTo(4);
     }
 
     @Test

@@ -1,4 +1,4 @@
-package org.library.services.exceptions;
+package org.library.exceptions;
 
 import java.util.Objects;
 

@@ -1,15 +1,15 @@
 package org.library.repositories;
 
 import org.junit.jupiter.api.*;
+import org.library.exceptions.DuplicateGenreNameException;
 import org.library.models.Genre;
-import org.library.services.exceptions.DuplicateGenreNameException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
+@DataMongoTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class GenreRepositoryTest {

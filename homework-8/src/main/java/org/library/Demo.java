@@ -17,9 +17,6 @@ public class Demo {
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(Demo.class);
-        //MongoTemplate mongoTemplate = context.getBean(MongoTemplate.class);
-        //mongoTemplate.indexOps("authors").ensureIndex(new Index("name", Sort.Direction.ASC).unique());
-        //mongoTemplate.indexOps("genres").ensureIndex(new Index("name", Sort.Direction.ASC).unique());
 
         System.out.println("\n\n\n----------------------------------------------\n\n");
         System.out.println("Книги в БД:");

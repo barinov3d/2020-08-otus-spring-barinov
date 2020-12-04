@@ -1,4 +1,4 @@
-package org.library.services.exceptions;
+package org.library.exceptions;
 
 public class DuplicateGenreNameException extends RepositoryException {
     public DuplicateGenreNameException(String message) {

@@ -4,21 +4,17 @@ import org.junit.jupiter.api.*;
 import org.library.models.Author;
 import org.library.models.Book;
 import org.library.models.Genre;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@DataMongoTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class BookRepositoryTest {
     private static final long STARTED_BOOKS_COUNT = 3;
     private static final String NEW_BOOK_TITLE = "Thinking in java";
@@ -46,8 +42,6 @@ class BookRepositoryTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldAddSeveralBooks() {
         Author author = authorRepository.findByName(NEW_AUTHOR_NAME).orElseThrow(AssertionError::new);
-        newBook.setAuthor(author);
-        newBook2.setAuthor(author);
         Book book1 = bookRepository.save(newBook);
         Book book2 = bookRepository.save(newBook2);
         assertThat(bookRepository.findById(book1.getId())).get().isEqualTo(book1);
@@ -57,7 +51,10 @@ class BookRepositoryTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldFindAllByAuthors() {
-        assertThat(bookRepository.findAllByAuthor(authorRepository.findByName(NEW_AUTHOR_NAME).get()).size()).isEqualTo(2);
+        final Author author = authorRepository.findByName(NEW_AUTHOR_NAME).get();
+        author.addBook(bookRepository.save(new Book("Animals", new Genre("My new genre"))));
+        authorRepository.save(author);
+        assertThat(bookRepository.findAllByAuthor(author).size()).isEqualTo(2);
     }
 
     @Test
@@ -86,16 +83,6 @@ class BookRepositoryTest {
         bookRepository.deleteById(book1.getId());
         final List<Book> books = bookRepository.findAll();
         assertThat(books).doesNotContain(newBook);
-    }
-
-    @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    void shouldAlsoUpdateAuthorWhenBookAdded() {
-        newBook.setAuthor(authorRepository.findByName(NEW_AUTHOR_NAME).orElseThrow(AssertionError::new));
-        bookRepository.save(newBook);
-        final Author author = authorRepository.findByName(NEW_AUTHOR_NAME).get();
-        System.out.println(author.getBooks());
-        assertThat(author.getBooks().size()).isEqualTo(2);
     }
 
 }

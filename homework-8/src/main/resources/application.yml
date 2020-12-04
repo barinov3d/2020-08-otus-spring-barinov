@@ -4,7 +4,7 @@ spring:
     initialization-mode: always
   shell:
     interactive:
-      enabled: false
+      enabled: true
   h2:
     console:
       enabled: true
