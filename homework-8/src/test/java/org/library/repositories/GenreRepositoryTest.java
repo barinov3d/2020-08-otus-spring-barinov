@@ -5,6 +5,7 @@ import org.library.exceptions.DuplicateGenreNameException;
 import org.library.models.Genre;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,20 +21,18 @@ class GenreRepositoryTest {
     private GenreRepository genreRepository;
 
     @Test
-    @Order(1)
     void shouldfindAll() {
         assertThat(genreRepository.findAll().size()).isEqualTo(2);
     }
 
     @Test
-    @Order(2)
     void shouldFindById() {
         Genre genre = genreRepository.save(new Genre("New genre 1"));
         assertThat(genreRepository.findById(genre.getId()).get()).isEqualTo(genre);
     }
 
     @Test
-    @Order(3)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldDeleteById() {
         Genre genre = genreRepository.save(new Genre("New genre 2"));
         genreRepository.deleteById(genre.getId());
@@ -41,7 +40,7 @@ class GenreRepositoryTest {
     }
 
     @Test
-    @Order(4)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldNotAddDuplicatedGenreName() {
         assertThrows(DuplicateGenreNameException.class, () -> genreRepository.save(new Genre(EXISTING_GENRE_NAME)));
     }

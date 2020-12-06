@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import org.library.models.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
 
@@ -20,20 +21,18 @@ class CommentRepositoryTest {
     private BookRepository bookRepository;
 
     @Test
-    @Order(1)
     void shouldfindAll() {
         assertThat(commentRepository.findAll().size()).isEqualTo(4);
     }
 
     @Test
-    @Order(2)
     void shouldFindById() {
         Comment comment = commentRepository.save(new Comment("New comment text 1", LocalDate.now()));
         assertThat(commentRepository.findById(comment.getId()).get()).isEqualTo(comment);
     }
 
     @Test
-    @Order(3)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldDeleteById() {
         Comment comment = commentRepository.save(new Comment("New comment text 2", LocalDate.now()));
         commentRepository.deleteById(comment.getId());
