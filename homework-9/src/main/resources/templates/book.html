@@ -23,28 +23,28 @@
     </style>
 </head>
 <body>
-
+<div class="row">
+    <button type="submit">Delete book..</button>
+</div>
 <!-- Book edition -->
 <form id="edit-form" action="book.html">
     <h1>Book Info:</h1>
 
     <div class="row">
-        <label for="holder-input-title">Title:</label>
-        <input id="holder-input-title" name="title" type="text" readonly="readonly" value="Title" th:value="${book.title}"/>
+        <label for="holder-input-title" style="font-weight: bold">Title:</label>
+        <input id="holder-input-title" name="title" type="text" value="Title" th:value="${book.title}"/>
     </div>
 
     <div class="row">
-        <label for="holder-input-genre">Genre:</label>
-        <input id="holder-input-genre" name="genre" type="text" readonly="readonly" value="Genre" th:value="${book.genre.name}"/>
+        <label for="holder-input-genre" style="font-weight: bold">Genre:</label>
+        <input id="holder-input-genre" name="genre" type="text" value="Genre" th:value="${book.genre.name}"/>
     </div>
 
     <div class="row">
-        <label for="holder-input-author">Author:</label>
-        <a th:href="@{/author(id=${author.id})}" href="author.html">
-            <input id="holder-input-author" name="genre" type="text" readonly="readonly" value="Genre" th:value="${author.name}">
-        </a>
+        <b style="font-weight: bold">Author:</b>
+        <a th:href="@{/author(id=${author.id})}" href="author.html" id="holder-input-author" th:text="${author.name}">author</a>
     </div>
-
+    <br>
     <table class="comments">
         <thead>
         <tr>
@@ -60,10 +60,25 @@
             <td th:text="${comment.date}">1</td>
             <td th:text="${comment.text}">1</td>
         </tr>
+        <tr>
+            <td>
+                <div class="row">
+                    <input name="comment" type="text" placeholder="new comment"/>
+                </div>
+            </td>
+            <td>
+                <div class="row">
+                    <div class="row">
+                        <button type="submit">Add</button>
+                    </div>
+                </div>
+            </td>
+        </tr>
         </tbody>
     </table>
 
     <div class="row">
+        <button onclick="location.href='/'" type="button">Back to book list</button>
         <button type="submit">Save</button>
     </div>
 </form>
