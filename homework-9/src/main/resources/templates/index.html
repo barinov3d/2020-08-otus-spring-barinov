@@ -20,13 +20,11 @@
 <table class="books">
     <thead>
     <tr>
-        <!--<th>ID</th>-->
         <th>Name</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="book : ${books}">
-<!--        <td th:text="${book.id}">1</td>-->
         <td>
             <a th:href="@{/book(id=${book.id})}" href="book.html" th:text="${book.title}">Book title</a>
         </td>

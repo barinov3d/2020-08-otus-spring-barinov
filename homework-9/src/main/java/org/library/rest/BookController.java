@@ -31,11 +31,18 @@ public class BookController {
     }
 
     @GetMapping("/book")
-    public String editPage(@RequestParam("id") String id, Model model) {
+    public String bookPage(@RequestParam("id") String id, Model model) {
         Book book = bookRepository.findById(id).orElseThrow(RuntimeException::new);
         Author author = authorRepository.findAuthorByBook(book);
         model.addAttribute("book", book);
         model.addAttribute("author", author);
         return "book";
+    }
+
+    @GetMapping("/author")
+    public String authorPage(@RequestParam("id") String id, Model model) {
+        Author author = authorRepository.findById(id).orElseThrow(RuntimeException::new);
+        model.addAttribute("author", author);
+        return "author";
     }
 }
