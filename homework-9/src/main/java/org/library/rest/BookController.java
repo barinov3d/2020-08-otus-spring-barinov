@@ -48,6 +48,15 @@ public class BookController {
         return "book";
     }
 
+    @GetMapping("/newbook")
+    public String newBookPage(Model model) {
+        List<Author> authors = authorRepository.findAll();
+        List<Genre> genres = genreRepository.findAll();
+        model.addAttribute("authors", authors);
+        model.addAttribute("genres", genres);
+        return "newbook";
+    }
+
     @GetMapping("/author")
     public String authorPage(@RequestParam("id") String id, Model model) {
         Author author = authorRepository.findById(id).orElseThrow(RuntimeException::new);
