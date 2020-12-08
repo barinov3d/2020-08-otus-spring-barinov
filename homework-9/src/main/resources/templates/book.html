@@ -35,10 +35,14 @@
         <input id="holder-input-title" name="title" type="text" value="Title" th:value="${book.title}"/>
     </div>
 
-    <div class="row">
-        <label for="holder-input-genre" style="font-weight: bold">Genre:</label>
-        <input id="holder-input-genre" name="genre" type="text" value="Genre" th:value="${book.genre.name}"/>
+    <div>
+        <br>
+        <label for="genres" style="font-weight: bold">Genres:</label>
+        <select id="genres">
+            <option th:each="genre : ${genres}" th:text="${genre.name}" value="genre">Genre name</option>
+        </select>
     </div>
+
 
     <div class="row">
         <b style="font-weight: bold">Author:</b>
