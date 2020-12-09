@@ -24,29 +24,32 @@
 </head>
 <body>
 <div class="row">
-    <button type="submit">Delete book..</button>
+<form action="#" th:action="@{/book/{id}/delete(id=${book.id})}" th:object="${book}" method="get">
+    <button type="submit" onclick="location.href='/'">Delete book..</button>
+</form>
 </div>
+<form id="save-book" action="book.html" th:action="@{/book/{id}/update(id=${book.id})}" method="post">
 <!-- Book edition -->
-<form id="edit-form" action="book.html">
     <h1>Book Info:</h1>
 
     <div class="row">
         <label for="holder-input-title" style="font-weight: bold">Title:</label>
         <input id="holder-input-title" name="title" type="text" value="Title" th:value="${book.title}"/>
     </div>
-
     <div>
         <br>
         <label for="genres" style="font-weight: bold">Genres:</label>
-        <select id="genres">
-            <option th:each="genre : ${genres}" th:text="${genre.name}" value="genre">Genre name</option>
+        <select id="genres" th:field="*{book.genre.name}">
+            <option th:each="genre1 : ${genres}" th:text="${genre1.name}" th:value="${genre1.name}">Genre name</option>
         </select>
     </div>
-
-
-    <div class="row">
-        <b style="font-weight: bold">Author:</b>
-        <a th:href="@{/author(id=${author.id})}" href="author.html" id="holder-input-author" th:text="${author.name}">author</a>
+    <div>
+        <br>
+        <div class="row">
+            <b style="font-weight: bold">Author:</b>
+            <a th:href="@{/author/{id}(id=${author.id})}"
+               href="author.html" id="holder-input-author" th:text="*{author.name}" th:value="*{author.name}">author</a>
+        </div>
     </div>
     <br>
     <table class="comments">

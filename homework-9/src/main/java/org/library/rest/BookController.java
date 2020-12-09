@@ -13,11 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class BookController {
@@ -42,8 +41,8 @@ public class BookController {
         return "index";
     }
 
-    @GetMapping("/book")
-    public String bookPage(@RequestParam("id") String id, Model model) {
+    @GetMapping("/book/{id}")
+    public String bookPage(@PathVariable("id") String id, Model model) {
         Book book = bookRepository.findById(id).orElseThrow(RuntimeException::new);
         Author author = authorRepository.findAuthorByBook(book);
         List<Genre> genres = genreRepository.findAll();
@@ -62,8 +61,17 @@ public class BookController {
         return "newbook";
     }
 
-    @GetMapping("/author")
-    public String authorPage(@RequestParam("id") String id, Model model) {
+    @PostMapping("/book/{id}/update")
+    public String updateBook(@PathVariable("id") String id, @ModelAttribute(value = "book") Book book) {
+        final Book bookFromRepo = bookRepository.findById(id).orElseThrow();
+        bookFromRepo.setTitle(book.getTitle());
+        bookFromRepo.setGenre(genreRepository.findByName(book.getGenre().getName()).orElseThrow());
+        bookRepository.save(bookFromRepo);
+        return "redirect:/book/{id}";
+    }
+
+    @GetMapping("/author/{id}")
+    public String authorPage(@PathVariable("id") String id, Model model) {
         Author author = authorRepository.findById(id).orElseThrow(RuntimeException::new);
         model.addAttribute("author", author);
         return "author";
@@ -71,7 +79,7 @@ public class BookController {
 
     @PostMapping("/addBook")
     public String addBook(@ModelAttribute(value = "book") Book book,
-                          @ModelAttribute(value = "author") Author author, BindingResult bindingResult){
+                          @ModelAttribute(value = "author") Author author){
         final String genreName = book.getGenre().getName();
         final String authorName = author.getName();
         final Author authorToUpdate = authorRepository.findByName(authorName)
@@ -79,6 +87,12 @@ public class BookController {
         authorToUpdate.addBook(bookRepository.save(new Book(book.getTitle(), genreRepository.findByName(genreName)
                 .orElseThrow(() -> new GenreNotFoundException(String.format("Genre with name %s not found", genreName))), authorToUpdate)));
         authorRepository.save(authorToUpdate);
+        return "redirect:/";
+    }
+
+    @GetMapping("/book/{id}/delete")
+    public String deleteBook(@PathVariable("id") String id){
+        bookRepository.deleteById(id);
         return "redirect:/";
     }
 }
