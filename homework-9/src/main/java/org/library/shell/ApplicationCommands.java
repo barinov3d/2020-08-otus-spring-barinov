@@ -36,13 +36,13 @@ public class ApplicationCommands {
                            @ShellOption(value = {"-genre_name"}) String genreName,
                            @ShellOption(value = {"-author_name"}) String authorName
     ) {
+        final Author author = authorRepository.findByName(authorName).orElseThrow(() ->
+                new AuthorNotFoundException(String.format("Author with name %s not found", authorName)));
         final Book book = bookRepository.save(new Book(title,
                 genreRepository.findByName(genreName)
                         .orElseThrow(() ->
-                                new GenreNotFoundException(String.format("Genre with name %s not found", genreName)))));
-        final Author author = authorRepository.findByName(authorName).orElseThrow(() ->
-                new AuthorNotFoundException(String.format("Author with name %s not found", authorName)));
-        author.addBook(book);
+                                new GenreNotFoundException(String.format("Genre with name %s not found", genreName))), author));
+        //TODO author.addBook(book);
         authorRepository.save(author);
     }
 

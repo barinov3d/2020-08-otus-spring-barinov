@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.library.exceptions.DuplicateAuthorBookException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,7 +26,7 @@ public class Author {
     private String name;
     @Field(name = "books")
     @DBRef
-    private List<Book> books;
+    private List<Book> books = new ArrayList();
 
     public Author(String name) {
         this.name = name;
@@ -37,7 +38,12 @@ public class Author {
     }
 
     public void addBook(Book book) {
-        books.add(book);
+        if (books.contains(book)) {
+            throw new DuplicateAuthorBookException(
+                    "book with same title " + book.getTitle() + " and genre " + book.getGenre() + " already exist for author");
+        } else {
+            books.add(book);
+        }
     }
 
     public void addBooks(List<Book> booksToAdd) {

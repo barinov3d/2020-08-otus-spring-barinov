@@ -42,18 +42,30 @@ public class DatabaseChangelog {
         commentRepository.save(comment3);
         commentRepository.save(comment4);
 
-        final Book book1 = new Book("Thinking in java", genre1, List.of(comment1, comment2));
-        final Book book2 = new Book("Learn Python the Hard Way", genre1, List.of(comment1, comment3, comment4));
-        final Book book3 = new Book("The Monster", genre2, Collections.emptyList());
+        final Author author1 = new Author("Bruce Eckel");
+        final Author author2 = new Author("Zed A. Shaw");
+        final Author author3 = new Author("Alfred Van Vogt");
+        final Author author4 = new Author("Super Author");
+
+        authorRepository.save(author1);
+        authorRepository.save(author2);
+        authorRepository.save(author3);
+        authorRepository.save(author4);
+
+        final Book book1 = new Book("Thinking in java", genre1, author1);
+        book1.addComments(List.of(comment1, comment2));
+        final Book book2 = new Book("Learn Python the Hard Way", genre1, author2);
+        book2.addComments(List.of(comment1, comment3, comment4));
+        final Book book3 = new Book("The Monster", genre2, author3);
+        book3.addComments(Collections.emptyList());
 
         bookRepository.save(book1);
         bookRepository.save(book2);
         bookRepository.save(book3);
 
-        final Author author1 = new Author("Bruce Eckel", List.of(book1));
-        final Author author2 = new Author("Zed A. Shaw", List.of(book2));
-        final Author author3 = new Author("Alfred Van Vogt", List.of(book3));
-        final Author author4 = new Author("Super Author");
+        author1.setBooks(List.of(book1));
+        author2.setBooks(List.of(book2));
+        author3.setBooks(List.of(book3));
 
         authorRepository.save(author1);
         authorRepository.save(author2);

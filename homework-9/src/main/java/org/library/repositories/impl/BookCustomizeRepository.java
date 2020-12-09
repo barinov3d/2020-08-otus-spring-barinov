@@ -12,4 +12,6 @@ public interface BookCustomizeRepository<T, ID> {
 
     Optional<Book> findBookByAuthorAndTitle(Author author, String title);
 
+    <S extends T> S save(S entity);
+
 }

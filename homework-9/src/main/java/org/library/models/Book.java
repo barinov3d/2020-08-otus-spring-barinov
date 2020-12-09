@@ -14,7 +14,7 @@ import java.util.List;
 
 @Data
 @ToString(exclude = {"comments"})
-@EqualsAndHashCode(of = {"id", "title", "genre"})
+@EqualsAndHashCode(of = {"title", "genre"})
 @Document(collection = "books")
 @NoArgsConstructor
 public class Book {
@@ -27,16 +27,17 @@ public class Book {
     private List<Comment> comments = new ArrayList<>();
     @Field(name = "genre")
     private Genre genre;
+    @Field(name = "author")
+    @DBRef
+    private Author author;
 
-    public Book(String title, Genre genre) {
+    public Book(String title, Genre genre, Author author) {
         this.title = title;
         this.genre = genre;
+        this.author = author;
     }
-
-    public Book(String title, Genre genre, List<Comment> comments) {
-        this.title = title;
-        this.genre = genre;
-        this.comments = comments;
+    public void addComments(List<Comment> commentsToAdd) {
+        comments.addAll(commentsToAdd);
     }
 
 }

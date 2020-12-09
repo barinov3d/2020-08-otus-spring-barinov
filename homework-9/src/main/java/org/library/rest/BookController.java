@@ -1,5 +1,7 @@
 package org.library.rest;
 
+import org.library.exceptions.AuthorNotFoundException;
+import org.library.exceptions.GenreNotFoundException;
 import org.library.models.Author;
 import org.library.models.Book;
 import org.library.models.Genre;
@@ -10,8 +12,11 @@ import org.library.repositories.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
@@ -48,12 +53,12 @@ public class BookController {
         return "book";
     }
 
-    @GetMapping("/newbook")
+    @GetMapping("/book/new")
     public String newBookPage(Model model) {
-        List<Author> authors = authorRepository.findAll();
-        List<Genre> genres = genreRepository.findAll();
-        model.addAttribute("authors", authors);
-        model.addAttribute("genres", genres);
+        model.addAttribute("authors", authorRepository.findAll());
+        model.addAttribute("genres", genreRepository.findAll());
+        model.addAttribute("book", new Book());
+        model.addAttribute("author", new Author());
         return "newbook";
     }
 
@@ -62,5 +67,18 @@ public class BookController {
         Author author = authorRepository.findById(id).orElseThrow(RuntimeException::new);
         model.addAttribute("author", author);
         return "author";
+    }
+
+    @PostMapping("/addBook")
+    public String addBook(@ModelAttribute(value = "book") Book book,
+                          @ModelAttribute(value = "author") Author author, BindingResult bindingResult){
+        final String genreName = book.getGenre().getName();
+        final String authorName = author.getName();
+        final Author authorToUpdate = authorRepository.findByName(authorName)
+                .orElseThrow(() -> new AuthorNotFoundException(String.format("Author with name: %s not found", authorName)));
+        authorToUpdate.addBook(bookRepository.save(new Book(book.getTitle(), genreRepository.findByName(genreName)
+                .orElseThrow(() -> new GenreNotFoundException(String.format("Genre with name %s not found", genreName))), authorToUpdate)));
+        authorRepository.save(authorToUpdate);
+        return "redirect:/";
     }
 }

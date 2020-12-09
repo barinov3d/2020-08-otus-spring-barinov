@@ -20,13 +20,21 @@ class BookRepositoryTest {
     private static final String NEW_BOOK_TITLE = "Thinking in java";
     private static final String NEW_BOOK_GENRE_NAME = "Other";
     private final String NEW_AUTHOR_NAME = "Bruce Eckel";
-    private final Book newBook = new Book(NEW_BOOK_TITLE, new Genre(NEW_BOOK_GENRE_NAME));
-    private final Book newBook2 = new Book(NEW_BOOK_TITLE + "2", new Genre(NEW_BOOK_GENRE_NAME));
+    private Book newBook;
+    private Book newBook2;
 
     @Autowired
     private BookRepository bookRepository;
     @Autowired
     private AuthorRepository authorRepository;
+
+    @BeforeEach
+    public void setUp() {
+        newBook = new Book(NEW_BOOK_TITLE, new Genre(NEW_BOOK_GENRE_NAME), authorRepository.findByName(NEW_AUTHOR_NAME)
+                .orElseThrow(AssertionError::new));
+        newBook2 = new Book(NEW_BOOK_TITLE + "2", new Genre(NEW_BOOK_GENRE_NAME), authorRepository.findByName(NEW_AUTHOR_NAME)
+                .orElseThrow(AssertionError::new));
+    }
 
     @Test
     void shouldReturnTotalCount() {
@@ -52,7 +60,7 @@ class BookRepositoryTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldFindAllByAuthors() {
         final Author author = authorRepository.findByName(NEW_AUTHOR_NAME).get();
-        author.addBook(bookRepository.save(new Book("Animals", new Genre("My new genre"))));
+        author.addBook(bookRepository.save(new Book("Animals", new Genre("My new genre"), author)));
         authorRepository.save(author);
         assertThat(bookRepository.findAllByAuthor(author).size()).isEqualTo(2);
     }
