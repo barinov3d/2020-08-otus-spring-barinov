@@ -53,8 +53,12 @@
                href="author.html" id="holder-input-author" th:text="*{author.name}" th:value="*{author.name}">author</a>
         </div>
     </div>
-
+    <div class="row">
+        <button onclick="location.href='/'" type="button">Back to book list</button>
+        <button type="submit">Save</button>
+    </div>
 </form>
+
 <form id="add-comment" action="book.html" th:action="@{/book/{id}/comment/add(id=${book.id})}" method="post">
     <br>
     <table class="comments">
@@ -89,11 +93,6 @@
         </tr>
         </tbody>
     </table>
-
-    <div class="row">
-        <button onclick="location.href='/'" type="button">Back to book list</button>
-        <button type="submit">Save</button>
-    </div>
 </form>
 
 </body>

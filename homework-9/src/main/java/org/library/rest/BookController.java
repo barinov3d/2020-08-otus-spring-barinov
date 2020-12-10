@@ -51,10 +51,10 @@ public class BookController {
         Author author = authorRepository.findAuthorByBook(book);
         List<Genre> genres = genreRepository.findAll();
         Comment comment = new Comment();
+        model.addAttribute("comment", comment);
         model.addAttribute("book", book);
         model.addAttribute("author", author);
         model.addAttribute("genres", genres);
-        model.addAttribute("comment", comment);
         return "book";
     }
 
@@ -68,7 +68,7 @@ public class BookController {
     }
 
     @PostMapping("/book/{id}/update")
-    public String updateBook(@PathVariable("id") String id, @ModelAttribute(value = "book") Book book) {
+    public String updateBook(@PathVariable("id") String id, @ModelAttribute(value = "book") Book book, Model model) {
         final Book bookFromRepo = bookRepository.findById(id).orElseThrow();
         bookFromRepo.setTitle(book.getTitle());
         bookFromRepo.setGenre(genreRepository.findByName(book.getGenre().getName()).orElseThrow());
