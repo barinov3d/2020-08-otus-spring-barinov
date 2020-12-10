@@ -3,7 +3,6 @@ package org.library.repositories.impl;
 import org.library.exceptions.AuthorNotFoundException;
 import org.library.exceptions.BookNotFoundException;
 import org.library.exceptions.DuplicateAuthorBookException;
-import org.library.exceptions.DuplicateAuthorNameException;
 import org.library.models.Author;
 import org.library.models.Book;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +50,9 @@ public class BookCustomizeRepositoryImpl<T, ID> implements BookCustomizeReposito
             query.addCriteria(Criteria.where("author").is(book.getAuthor()));
             final Optional<Book> findedBook = Optional.ofNullable(mongoTemplate.findOne(query, Book.class));
             findedBook.ifPresent(g -> {
-                        throw new DuplicateAuthorBookException(
-                                "Book with title '" + book.getTitle() + " and genre '" + book.getGenre() + "' is already define in the scope");
-                    });
+                throw new DuplicateAuthorBookException(
+                        "Book with title '" + book.getTitle() + " and genre '" + book.getGenre() + "' is already define in the scope");
+            });
         }
         mongoTemplate.save(book);
         return (S) book;

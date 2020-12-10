@@ -17,11 +17,11 @@
 <body>
 <h1>All books list:</h1>
 <div class="row">
-    <button type="submit" onclick="location.href='/book/new'" >Add new book..</button>
+    <button onclick="location.href='/book/new'" type="submit">Add new book..</button>
 </div>
 <br>
 <div class="row">
-    <button type="submit" onclick="location.href='/author/new'" >Add new author..</button>
+    <button onclick="location.href='/author/new'" type="submit">Add new author..</button>
 </div>
 <br>
 <table class="books">
@@ -33,7 +33,7 @@
     <tbody>
     <tr th:each="book : ${books}">
         <td>
-            <a th:href="@{/book/{id}(id=${book.id})}" href="book.html" th:text="${book.title}">Book title</a>
+            <a href="book.html" th:href="@{/book/{id}(id=${book.id})}" th:text="${book.title}">Book title</a>
         </td>
     </tr>
     </tbody>
