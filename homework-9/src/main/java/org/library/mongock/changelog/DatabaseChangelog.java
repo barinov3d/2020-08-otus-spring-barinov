@@ -53,11 +53,11 @@ public class DatabaseChangelog {
         authorRepository.save(author4);
 
         final Book book1 = new Book("Thinking in java", genre1, author1);
-        book1.addComments(List.of(comment1, comment2));
+        book1.getComments().addAll(List.of(comment1, comment2));
         final Book book2 = new Book("Learn Python the Hard Way", genre1, author2);
-        book2.addComments(List.of(comment1, comment3, comment4));
+        book2.getComments().addAll(List.of(comment1, comment3, comment4));
         final Book book3 = new Book("The Monster", genre2, author3);
-        book3.addComments(Collections.emptyList());
+        book3.getComments().addAll(Collections.emptyList());
 
         bookRepository.save(book1);
         bookRepository.save(book2);

@@ -23,13 +23,15 @@
     </style>
 </head>
 <body>
-<div class="row">
+
 <form action="#" th:action="@{/book/{id}/delete(id=${book.id})}" th:object="${book}" method="get">
-    <button type="submit" onclick="location.href='/'">Delete book..</button>
+    <div class="row">
+        <button type="submit" onclick="location.href='/'">Delete book..</button>
+    </div>
 </form>
-</div>
+
 <form id="save-book" action="book.html" th:action="@{/book/{id}/update(id=${book.id})}" method="post">
-<!-- Book edition -->
+    <!-- Book edition -->
     <h1>Book Info:</h1>
 
     <div class="row">
@@ -51,6 +53,9 @@
                href="author.html" id="holder-input-author" th:text="*{author.name}" th:value="*{author.name}">author</a>
         </div>
     </div>
+
+</form>
+<form id="add-comment" action="book.html" th:action="@{/book/{id}/comment/add(id=${book.id})}" method="post">
     <br>
     <table class="comments">
         <thead>
@@ -63,14 +68,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="comment : ${book.comments}">
-            <td th:text="${comment.date}">1</td>
-            <td th:text="${comment.text}">1</td>
+        <tr th:each="comment1 : ${book.comments}">
+            <td th:text="${comment1.date}">1</td>
+            <td th:text="${comment1.text}">1</td>
         </tr>
         <tr>
             <td>
                 <div class="row">
-                    <input name="comment" type="text" placeholder="new comment"/>
+                    <input th:field="*{comment.text}" name="comment" type="text" placeholder="new comment"
+                           th:value="${comment.text}" th:text="${comment.text}"/>
                 </div>
             </td>
             <td>

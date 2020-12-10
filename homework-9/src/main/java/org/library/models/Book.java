@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,9 +36,6 @@ public class Book {
         this.title = title;
         this.genre = genre;
         this.author = author;
-    }
-    public void addComments(List<Comment> commentsToAdd) {
-        comments.addAll(commentsToAdd);
     }
 
 }

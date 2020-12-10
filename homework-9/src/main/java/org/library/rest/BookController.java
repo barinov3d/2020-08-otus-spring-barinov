@@ -4,6 +4,7 @@ import org.library.exceptions.AuthorNotFoundException;
 import org.library.exceptions.GenreNotFoundException;
 import org.library.models.Author;
 import org.library.models.Book;
+import org.library.models.Comment;
 import org.library.models.Genre;
 import org.library.repositories.AuthorRepository;
 import org.library.repositories.BookRepository;
@@ -12,9 +13,12 @@ import org.library.repositories.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,9 +50,11 @@ public class BookController {
         Book book = bookRepository.findById(id).orElseThrow(RuntimeException::new);
         Author author = authorRepository.findAuthorByBook(book);
         List<Genre> genres = genreRepository.findAll();
+        Comment comment = new Comment();
         model.addAttribute("book", book);
         model.addAttribute("author", author);
         model.addAttribute("genres", genres);
+        model.addAttribute("comment", comment);
         return "book";
     }
 
@@ -79,7 +85,7 @@ public class BookController {
 
     @PostMapping("/addBook")
     public String addBook(@ModelAttribute(value = "book") Book book,
-                          @ModelAttribute(value = "author") Author author){
+                          @ModelAttribute(value = "author") Author author) {
         final String genreName = book.getGenre().getName();
         final String authorName = author.getName();
         final Author authorToUpdate = authorRepository.findByName(authorName)
@@ -90,8 +96,16 @@ public class BookController {
         return "redirect:/";
     }
 
+    @PostMapping("/book/{id}/comment/add")
+    public String addBook(@PathVariable("id") String id, Comment comment) {
+        final Book book = bookRepository.findById(id).orElseThrow();
+        book.getComments().add(commentRepository.save(new Comment((comment.getText()), LocalDate.now())));
+        bookRepository.save(book);
+        return "redirect:/book/{id}";
+    }
+
     @GetMapping("/book/{id}/delete")
-    public String deleteBook(@PathVariable("id") String id){
+    public String deleteBook(@PathVariable("id") String id) {
         bookRepository.deleteById(id);
         return "redirect:/";
     }
