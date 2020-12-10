@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
+  shell:
+    interactive:
+      enabled: false
+  data:
+    mongodb:
+      database: library
+      port: 0
+mongock:
+  #runner-type: "ApplicationRunner" # default
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - org.library.mongock.changelog
