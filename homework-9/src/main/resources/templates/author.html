@@ -23,11 +23,14 @@
     </style>
 </head>
 <body>
-<div class="row">
-    <button type="submit">Delete author and all his books..</button>
-</div>
+
+<form action="#" th:action="@{/author/{id}/delete(id=${author.id})}" th:object="${author}" method="get">
+    <div class="row">
+        <button type="submit" onclick="location.href='/'">Delete author and all his books..</button>
+    </div>
+</form>
 <!-- Author edition -->
-<form id="edit-form" action="author.html">
+<form id="edit-form" th:action="@{/author/{id}/update(id=${author.id})}" method="post" action="author.html">
     <h1>Author Info:</h1>
 
     <div class="row">
