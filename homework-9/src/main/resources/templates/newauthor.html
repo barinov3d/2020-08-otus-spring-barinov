@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <name>Edit author</name>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Book edition -->
+<form action="newauthor.html" id="edit-form" method="post" th:action="@{/addAuthor}">
+    <h1>Book Info:</h1>
+
+    <div class="row">
+        <label for="holder-input-name" style="font-weight: bold">Name:</label>
+        <input id="holder-input-name" name="name" th:field="*{author.name}" type="text" value="Name"/>
+    </div>
+
+    </div>
+
+
+    <div class="row">
+        <button onclick="location.href='/'" type="button">Back to book list</button>
+        <button onclick="location.href='/'" type="submit">Save</button>
+    </div>
+</form>
+
+</body>
+</html>

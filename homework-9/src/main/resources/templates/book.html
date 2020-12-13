@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<form action="#" method="get" th:action="@{/book/{id}/delete(id=${book.id})}" th:object="${book}">
+    <div class="row">
+        <button onclick="location.href='/'" type="submit">Delete book..</button>
+    </div>
+</form>
+
+<form action="book.html" id="save-book" method="post" th:action="@{/book/{id}/update(id=${book.id})}">
+    <!-- Book edition -->
+    <h1>Book Info:</h1>
+
+    <div class="row">
+        <label for="holder-input-title" style="font-weight: bold">Title:</label>
+        <input id="holder-input-title" name="title" th:value="${book.title}" type="text" value="Title"/>
+    </div>
+    <div>
+        <br>
+        <label for="genres" style="font-weight: bold">Genres:</label>
+        <select id="genres" th:field="*{book.genre.name}">
+            <option th:each="genre1 : ${genres}" th:text="${genre1.name}" th:value="${genre1.name}">Genre name</option>
+        </select>
+    </div>
+    <div>
+        <br>
+        <div class="row">
+            <b style="font-weight: bold">Author:</b>
+            <a href="author.html"
+               id="holder-input-author" th:href="@{/author/{id}(id=${author.id})}" th:text="*{author.name}" th:value="*{author.name}">author</a>
+        </div>
+    </div>
+    <div class="row">
+        <button onclick="location.href='/'" type="button">Back to book list</button>
+        <button type="submit">Save</button>
+    </div>
+</form>
+
+<form action="book.html" id="add-comment" method="post" th:action="@{/book/{id}/comment/add(id=${book.id})}">
+    <br>
+    <table class="comments">
+        <thead>
+        <tr>
+            <th>Book comments</th>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <th>Text</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="comment1 : ${book.comments}">
+            <td th:text="${comment1.date}">1</td>
+            <td th:text="${comment1.text}">1</td>
+        </tr>
+        <tr>
+            <td>
+                <div class="row">
+                    <input name="comment" placeholder="new comment" th:field="*{comment.text}" th:text="${comment.text}"
+                           th:value="${comment.text}" type="text"/>
+                </div>
+            </td>
+            <td>
+                <div class="row">
+                    <div class="row">
+                        <button type="submit">Add</button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+</body>
+</html>
