@@ -56,7 +56,7 @@ public class BookPageController {
         return "book";
     }
 
-    @GetMapping("/book/new")
+    @GetMapping("/book")
     public String newBookPage(Model model) {
         model.addAttribute("authors", authorRepository.findAll());
         model.addAttribute("genres", genreRepository.findAll());
@@ -65,7 +65,7 @@ public class BookPageController {
         return "newbook";
     }
 
-    @PostMapping("/addBook")
+    @PostMapping("/book")
     public String addBook(@ModelAttribute(value = "book") Book book,
                           @ModelAttribute(value = "author") Author author) {
         final String genreName = book.getGenre().getName();
@@ -78,13 +78,13 @@ public class BookPageController {
         return "redirect:/";
     }
 
-    @GetMapping("/author/new")
+    @GetMapping("/author")
     public String newAuthorPage(Model model) {
         model.addAttribute("author", new Author());
         return "newauthor";
     }
 
-    @PostMapping("/addAuthor")
+    @PostMapping("/author")
     public String addBook(@ModelAttribute(value = "author") Author author) {
         author.setName(author.getName());
         authorRepository.save(author);
@@ -122,7 +122,7 @@ public class BookPageController {
         return "author";
     }
 
-    @PostMapping("/book/{id}/comment/add")
+    @PostMapping("/book/{id}/comment/")
     public String addBook(@PathVariable("id") String id, Comment comment) {
         final Book book = bookRepository.findById(id).orElseThrow();
         book.getComments().add(commentRepository.save(new Comment((comment.getText()), LocalDate.now())));

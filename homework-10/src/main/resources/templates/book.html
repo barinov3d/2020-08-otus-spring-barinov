@@ -60,7 +60,7 @@
     </div>
 </form>
 
-<form action="book.html" id="add-comment" method="post" th:action="@{/book/{id}/comment/add(id=${book.id})}">
+<form action="book.html" id="add-comment" method="post" th:action="@{/book/{id}/comment/(id=${book.id})}">
     <br>
     <table class="comments">
         <thead>
