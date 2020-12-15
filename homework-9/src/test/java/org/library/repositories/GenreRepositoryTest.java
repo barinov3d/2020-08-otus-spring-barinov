@@ -22,7 +22,7 @@ class GenreRepositoryTest {
 
     @Test
     void shouldfindAll() {
-        assertThat(genreRepository.findAll().size()).isEqualTo(2);
+        assertThat(genreRepository.findAll().size()).isEqualTo(6);
     }
 
     @Test
