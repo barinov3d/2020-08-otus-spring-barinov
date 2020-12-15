@@ -22,7 +22,7 @@ class CommentRepositoryTest {
 
     @Test
     void shouldfindAll() {
-        assertThat(commentRepository.findAll().size()).isEqualTo(4);
+        assertThat(commentRepository.findAll().size()).isEqualTo(5);
     }
 
     @Test
