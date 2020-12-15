@@ -21,22 +21,23 @@
             margin-top: 10px;
         }
     </style>
+    <script src="/webjars/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 
-<form action="#" th:action="@{/book/{id}/delete(id=${book.id})}" th:object="${book}" method="get">
+<form action="#" method="get" th:action="@{/book/{id}/delete(id=${book.id})}" th:object="${book}">
     <div class="row">
-        <button type="submit" onclick="location.href='/'">Delete book..</button>
+        <button onclick="location.href='/'" type="submit">Delete book..</button>
     </div>
 </form>
 
-<form id="save-book" action="book.html" th:action="@{/book/{id}/update(id=${book.id})}" method="post">
+<form action="book.html" id="save-book" method="post" th:action="@{/book/{id}/update(id=${book.id})}">
     <!-- Book edition -->
     <h1>Book Info:</h1>
 
     <div class="row">
         <label for="holder-input-title" style="font-weight: bold">Title:</label>
-        <input id="holder-input-title" name="title" type="text" value="Title" th:value="${book.title}"/>
+        <input id="holder-input-title" name="title" th:value="${book.title}" type="text" value="Title"/>
     </div>
     <div>
         <br>
@@ -49,8 +50,8 @@
         <br>
         <div class="row">
             <b style="font-weight: bold">Author:</b>
-            <a th:href="@{/author/{id}(id=${author.id})}"
-               href="author.html" id="holder-input-author" th:text="*{author.name}" th:value="*{author.name}">author</a>
+            <a href="author.html"
+               id="holder-input-author" th:href="@{/author/{id}(id=${author.id})}" th:text="*{author.name}" th:value="*{author.name}">author</a>
         </div>
     </div>
     <div class="row">
@@ -59,7 +60,7 @@
     </div>
 </form>
 
-<form id="add-comment" action="book.html" th:action="@{/book/{id}/comment/add(id=${book.id})}" method="post">
+<form action="book.html" id="add-comment" method="post" th:action="@{/book/{id}/comment/add(id=${book.id})}">
     <br>
     <table class="comments">
         <thead>
@@ -72,15 +73,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="comment1 : ${book.comments}">
-            <td th:text="${comment1.date}">1</td>
-            <td th:text="${comment1.text}">1</td>
-        </tr>
+        <!--        <tr th:each="comment1 : ${book.comments}">
+                    <td th:text="${comment1.date}">1</td>
+                    <td th:text="${comment1.text}">1</td>
+                </tr>-->
         <tr>
             <td>
                 <div class="row">
-                    <input th:field="*{comment.text}" name="comment" type="text" placeholder="new comment"
-                           th:value="${comment.text}" th:text="${comment.text}"/>
+                    <input name="comment" placeholder="new comment" th:field="*{comment.text}" th:text="${comment.text}"
+                           th:value="${comment.text}" type="text"/>
                 </div>
             </td>
             <td>
@@ -94,6 +95,19 @@
         </tbody>
     </table>
 </form>
-
+<script>
+    $(function () {
+        $.get(window.location.pathname + '/comments').done(function (comments) {
+            comments.forEach(function (comment) {
+                $('table.comments').children('tbody').prepend(`
+                    <tr>
+                        <td>${comment.date}</td>
+                        <td>${comment.text}</td>
+                    </tr>
+                `)
+            });
+        })
+    });
+</script>
 </body>
 </html>
