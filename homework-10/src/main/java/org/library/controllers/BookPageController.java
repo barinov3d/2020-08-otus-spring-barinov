@@ -52,6 +52,40 @@ public class BookPageController {
         return "book";
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(BookNotFoundException.class)
+    public ModelAndView handleNotFound(Exception exception) {
+
+        log.error("Handling not found exception");
+        log.error(exception.getMessage());
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("404");
+        modelAndView.addObject("exception", exception);
+
+        return modelAndView;
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler({
+            DuplicateAuthorBookException.class,
+            DuplicateGenreNameException.class,
+            DuplicateAuthorNameException.class
+    })
+    public ModelAndView handleDuplicated(Exception exception) {
+
+        log.error("Handling not found exception");
+        log.error(exception.getMessage());
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("409");
+        modelAndView.addObject("exception", exception);
+
+        return modelAndView;
+    }
+
     @GetMapping("/book")
     public String newBookPage(Model model) {
         model.addAttribute("authors", authorService.findAll());
@@ -93,40 +127,6 @@ public class BookPageController {
     public String deleteBook(@PathVariable("id") String id) {
         bookService.deleteById(id);
         return "redirect:/";
-    }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(BookNotFoundException.class)
-    public ModelAndView handleNotFound(Exception exception) {
-
-        log.error("Handling not found exception");
-        log.error(exception.getMessage());
-
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.setViewName("404");
-        modelAndView.addObject("exception", exception);
-
-        return modelAndView;
-    }
-
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler({
-            DuplicateAuthorBookException.class,
-            DuplicateGenreNameException.class,
-            DuplicateAuthorNameException.class
-    })
-    public ModelAndView handleDuplicated(Exception exception) {
-
-        log.error("Handling not found exception");
-        log.error(exception.getMessage());
-
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.setViewName("409");
-        modelAndView.addObject("exception", exception);
-
-        return modelAndView;
     }
 
 }

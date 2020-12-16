@@ -1,42 +1,33 @@
 package org.library.controllers;
 
-import javassist.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.library.exceptions.*;
 import org.library.models.Author;
 import org.library.models.Book;
-import org.library.models.Genre;
 import org.library.services.AuthorService;
 import org.library.services.BookService;
 import org.library.services.CommentService;
 import org.library.services.GenreService;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class BookPageControllerTest {
+public class AuthorPageControllerTest {
 
     @Mock
     BookService bookService;
     @Mock
     AuthorService authorService;
-    @Mock
-    GenreService genreService;
-    @Mock
-    CommentService commentService;
 
-    BookPageController controller;
+    AuthorPageController controller;
 
     MockMvc mockMvc;
 
@@ -44,27 +35,27 @@ public class BookPageControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        controller = new BookPageController(bookService, authorService, genreService, commentService);
+        controller = new AuthorPageController(bookService, authorService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
     @Test
-    public void testGetBook() throws Exception {
+    public void testGetAuthor() throws Exception {
 
-        Book book = new Book();
-        book.setId("1");
+        Author author = new Author();
+        author.setId("1");
 
-        when(bookService.findById(anyString())).thenReturn(book);
+        when(authorService.findById(anyString())).thenReturn(author);
 
-        mockMvc.perform(get("/book/1/"))
+        mockMvc.perform(get("/author/1/"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("book"))
-                .andExpect(model().attributeExists("book"));
+                .andExpect(view().name("author"))
+                .andExpect(model().attributeExists("author"));
     }
 
     @Test
-    public void testGetBookNotFound() throws Exception {
-        checkViewExceptionPage(new BookNotFoundException(""), status().isNotFound(),"404");
+    public void testGetAuthorNotFound() throws Exception {
+        checkViewExceptionPage(new AuthorNotFoundException(""), status().isNotFound(),"404");
     }
 
     @Test
@@ -83,18 +74,18 @@ public class BookPageControllerTest {
     }
 
     private void checkViewExceptionPage(RepositoryException e,ResultMatcher resultMatcher ,String view) throws Exception {
-        when(bookService.findById(anyString())).thenThrow(e);
-        mockMvc.perform(get("/book/1/"))
+        when(authorService.findById(anyString())).thenThrow(e);
+        mockMvc.perform(get("/author/1/"))
                 .andExpect(resultMatcher)
                 .andExpect(view().name(view));
     }
 
     @Test
     public void testDeleteAction() throws Exception {
-        mockMvc.perform(get("/book/1/delete"))
+        mockMvc.perform(get("/author/1/delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
 
-        verify(bookService, times(1)).deleteById(anyString());
+        verify(authorService, times(1)).deleteById(anyString());
     }
 }
