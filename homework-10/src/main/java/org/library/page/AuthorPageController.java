@@ -2,9 +2,7 @@ package org.library.page;
 
 import org.library.models.Author;
 import org.library.repositories.AuthorRepository;
-import org.library.repositories.BookRepository;
-import org.library.repositories.CommentRepository;
-import org.library.repositories.GenreRepository;
+import org.library.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,17 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class AuthorPageController {
-    private final BookRepository bookRepository;
+    private final BookService bookService;
     private final AuthorRepository authorRepository;
-    private final GenreRepository genreRepository;
-    private final CommentRepository commentRepository;
 
     @Autowired
-    public AuthorPageController(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository, CommentRepository commentRepository) {
-        this.bookRepository = bookRepository;
+    public AuthorPageController(BookService bookService, AuthorRepository authorRepository) {
+        this.bookService = bookService;
         this.authorRepository = authorRepository;
-        this.genreRepository = genreRepository;
-        this.commentRepository = commentRepository;
     }
 
     @GetMapping("/author")
@@ -51,7 +45,7 @@ public class AuthorPageController {
 
     @GetMapping("/author/{id}/delete")
     public String deleteAuthor(@PathVariable("id") String id) {
-        bookRepository.deleteAll(bookRepository.findAllByAuthor(authorRepository.findById(id).orElseThrow()));
+        bookService.deleteAll(bookService.findAllByAuthor(authorRepository.findById(id).orElseThrow()));
         authorRepository.deleteById(id);
         return "redirect:/";
     }

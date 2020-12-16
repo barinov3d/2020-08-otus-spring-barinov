@@ -26,7 +26,7 @@ public class Author {
     private String name;
     @Field(name = "books")
     @DBRef
-    private List<Book> books = new ArrayList();
+    private List<Book> books = new ArrayList<>();
 
     public Author(String name) {
         this.name = name;

@@ -1,9 +1,11 @@
-package org.library.repositories;
+package org.library.services;
 
 import org.junit.jupiter.api.*;
 import org.library.exceptions.DuplicateAuthorNameException;
 import org.library.models.Author;
 import org.library.models.Book;
+import org.library.repositories.AuthorRepository;
+import org.library.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -23,62 +25,73 @@ class AuthorRepositoryTest {
 
     @Autowired
     private AuthorRepository authorRepository;
+
     @Autowired
     private BookRepository bookRepository;
 
+    private AuthorServiceImpl authorService;
+
+    private BookService bookService;
+
+    @BeforeEach
+    public void setUp() {
+        this.bookService = new BookServiceImpl(bookRepository, authorRepository);
+        this.authorService = new AuthorServiceImpl(bookRepository, authorRepository);
+    }
+
+
     @Test
     void shouldfindAll() {
-        assertThat(authorRepository.findAll().size()).isEqualTo(STARTED_AUTHOR_COUNT);
+        assertThat(authorService.findAll().size()).isEqualTo(STARTED_AUTHOR_COUNT);
     }
 
     @Test
     void shouldFindAuthorBooks() {
-        Author author = authorRepository.findByName(EXISTING_AUTHOR_NAME).get();
+        Author author = authorService.findByName(EXISTING_AUTHOR_NAME);
         List<Book> books = author.getBooks();
         assertThat(books.get(0))
-                .isEqualTo(bookRepository.findBookByAuthorAndTitle(author, "Learn Python the Hard Way").get());
+                .isEqualTo(bookService.findBookByAuthorAndTitle(author, "Learn Python the Hard Way"));
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldUpdateNameById() {
-        var existingAuthorId = authorRepository.findByName(EXISTING_AUTHOR_NAME).get().getId();
+        var existingAuthorId = authorService.findByName(EXISTING_AUTHOR_NAME).getId();
         final String expectedName = EXISTING_AUTHOR_NAME + " updated";
-        final Author author = authorRepository.findByName(EXISTING_AUTHOR_NAME).get();
+        final Author author = authorService.findByName(EXISTING_AUTHOR_NAME);
         author.setName(expectedName);
-        authorRepository.save(author);
-        final Author actualAuthor = authorRepository.findById(existingAuthorId).get();
+        authorService.save(author);
+        final Author actualAuthor = authorService.findById(existingAuthorId);
         assertThat(actualAuthor.getName()).isEqualTo(expectedName);
     }
 
     @Test
     void shouldFindById() {
-        Author authorFromRepo = authorRepository.save(new Author(EXISTING_AUTHOR_NAME + 2));
+        Author authorFromRepo = authorService.save(new Author(EXISTING_AUTHOR_NAME + 2));
         final String authorId = authorFromRepo.getId();
-        assertThat(authorRepository.findById(authorId).get()).isEqualTo(authorFromRepo);
+        assertThat(authorService.findById(authorId)).isEqualTo(authorFromRepo);
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldDeleteById() {
         final String authorName = EXISTING_AUTHOR_NAME + 3;
-        final Author authorFromRepo = authorRepository.save(new Author(authorName));
-        authorRepository.deleteById(authorFromRepo.getId());
-        assertThat(authorRepository.findAll()).doesNotContain(authorFromRepo);
+        final Author authorFromRepo = authorService.save(new Author(authorName));
+        authorService.deleteById(authorFromRepo.getId());
+        assertThat(authorService.findAll()).doesNotContain(authorFromRepo);
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldNotAddDuplicatedAuthorName() {
         assertThrows(DuplicateAuthorNameException.class, () ->
-                authorRepository.save(new Author(EXISTING_AUTHOR_NAME)));
+                authorService.save(new Author(EXISTING_AUTHOR_NAME)));
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldDeleteAllBooksIfAuthorDeleted() {
-        authorRepository.delete(authorRepository.findByName(EXISTING_AUTHOR_NAME).orElseThrow(AssertionError::new));
-
+        authorService.delete(authorService.findByName(EXISTING_AUTHOR_NAME));
     }
 
 

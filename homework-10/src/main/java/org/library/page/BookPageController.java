@@ -1,6 +1,5 @@
 package org.library.page;
 
-import org.library.exceptions.AuthorNotFoundException;
 import org.library.exceptions.GenreNotFoundException;
 import org.library.models.Author;
 import org.library.models.Book;
@@ -70,8 +69,7 @@ public class BookPageController {
                           @ModelAttribute(value = "author") Author author) {
         final String genreName = book.getGenre().getName();
         final String authorName = author.getName();
-        final Author authorToUpdate = authorRepository.findByName(authorName)
-                .orElseThrow(() -> new AuthorNotFoundException(String.format("Author with name: %s not found", authorName)));
+        final Author authorToUpdate = authorRepository.findByName(authorName);
         authorToUpdate.addBook(bookRepository.save(new Book(book.getTitle(), genreRepository.findByName(genreName)
                 .orElseThrow(() -> new GenreNotFoundException(String.format("Genre with name %s not found", genreName))), authorToUpdate)));
         authorRepository.save(authorToUpdate);
