@@ -39,8 +39,6 @@ class BookRepositoryTest {
     public void setUp() {
         this.bookService = new BookServiceImpl(bookRepository, authorRepository);
         this.authorService = new AuthorServiceImpl(bookRepository, authorRepository);
-        newBook = new Book(NEW_BOOK_TITLE, new Genre(NEW_BOOK_GENRE_NAME), authorService.findByName(NEW_AUTHOR_NAME));
-        newBook2 = new Book(NEW_BOOK_TITLE + "2", new Genre(NEW_BOOK_GENRE_NAME), authorService.findByName(NEW_AUTHOR_NAME));
     }
 
     @Test
@@ -56,7 +54,8 @@ class BookRepositoryTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldAddSeveralBooks() {
-        Author author = authorService.findByName(NEW_AUTHOR_NAME);
+        newBook = new Book(NEW_BOOK_TITLE, new Genre(NEW_BOOK_GENRE_NAME), authorService.findByName(NEW_AUTHOR_NAME));
+        newBook2 = new Book(NEW_BOOK_TITLE + "2", new Genre(NEW_BOOK_GENRE_NAME), authorService.findByName(NEW_AUTHOR_NAME));
         Book book1 = bookService.save(newBook);
         Book book2 = bookService.save(newBook2);
         assertThat(bookService.findById(book1.getId())).isEqualTo(book1);
@@ -75,6 +74,7 @@ class BookRepositoryTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldFindById() {
+        newBook = new Book(NEW_BOOK_TITLE, new Genre(NEW_BOOK_GENRE_NAME), authorService.findByName(NEW_AUTHOR_NAME));
         Book book1 = bookService.save(newBook);
         assertThat(bookService.findById(book1.getId())).isEqualTo(book1);
     }
@@ -94,6 +94,7 @@ class BookRepositoryTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldDeleteById() {
+        newBook = new Book(NEW_BOOK_TITLE, new Genre(NEW_BOOK_GENRE_NAME), authorService.findByName(NEW_AUTHOR_NAME));
         Book book1 = bookService.save(newBook);
         bookService.deleteById(book1.getId());
         final List<Book> books = bookService.findAll();

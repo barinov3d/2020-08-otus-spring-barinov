@@ -1,6 +1,7 @@
 package org.library.services;
 
 import org.junit.jupiter.api.*;
+import org.library.exceptions.BookNotFoundException;
 import org.library.exceptions.DuplicateAuthorNameException;
 import org.library.models.Author;
 import org.library.models.Book;
@@ -91,7 +92,9 @@ class AuthorRepositoryTest {
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldDeleteAllBooksIfAuthorDeleted() {
+        assertThat(bookService.findByTitle("Learn Python the Hard Way")).isInstanceOf(Book.class);
         authorService.delete(authorService.findByName(EXISTING_AUTHOR_NAME));
+        assertThrows(BookNotFoundException.class, () -> bookService.findByTitle("Learn Python the Hard Way"));
     }
 
 

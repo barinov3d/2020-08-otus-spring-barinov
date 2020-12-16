@@ -23,4 +23,11 @@ public class BookCustomizeRepositoryImpl<T, ID> implements BookCustomizeReposito
         return findedBook.isPresent();
     }
 
+    @Override
+    public Book findByName(String name) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("title").is(name));
+        return mongoTemplate.findOne(query, Book.class);
+    }
+
 }

@@ -28,6 +28,15 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Book findByTitle(String name) {
+        final Book book = bookRepository.findByName(name);
+        if (book == null) {
+            throw new BookNotFoundException(String.format("Book with name: %s not found", name));
+        }
+        return book;
+    }
+
+    @Override
     public Book findById(String id) {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(String.format("Book with id: %s not found", id)));

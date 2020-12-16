@@ -3,6 +3,7 @@ package org.library.services;
 import org.library.exceptions.AuthorNotFoundException;
 import org.library.exceptions.DuplicateAuthorNameException;
 import org.library.models.Author;
+import org.library.models.Book;
 import org.library.repositories.AuthorRepository;
 import org.library.repositories.BookRepository;
 import org.springframework.stereotype.Service;
@@ -33,11 +34,17 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void deleteById(String id) {
+        final Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new AuthorNotFoundException(String.format("Author with id: %s not found", id)));
+        final List<Book> books = author.getBooks();
+        bookRepository.deleteAll(books);
         authorRepository.deleteById(id);
     }
 
     @Override
     public void delete(Author author) {
+        final List<Book> books = author.getBooks();
+        bookRepository.deleteAll(books);
         authorRepository.delete(author);
     }
 

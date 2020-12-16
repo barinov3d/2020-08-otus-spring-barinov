@@ -1,5 +1,8 @@
 package org.library.services;
 
+import org.library.exceptions.AuthorNotFoundException;
+import org.library.exceptions.BookNotFoundException;
+import org.library.exceptions.DuplicateAuthorBookException;
 import org.library.models.Author;
 import org.library.models.Book;
 
@@ -9,7 +12,9 @@ public interface BookService {
 
     long count();
 
-    Book findById(String id);
+    Book findByTitle(String name) throws BookNotFoundException;
+
+    Book findById(String id) throws BookNotFoundException;
 
     void deleteById(String id);
 
@@ -17,10 +22,10 @@ public interface BookService {
 
     List<Book> findAll();
 
-    List<Book> findAllByAuthor(Author author);
+    List<Book> findAllByAuthor(Author author) throws AuthorNotFoundException;
 
-    Book findBookByAuthorAndTitle(Author author, String title);
+    Book findBookByAuthorAndTitle(Author author, String title) throws BookNotFoundException;
 
-    Book save(Book book);
+    Book save(Book book) throws DuplicateAuthorBookException;
 
 }

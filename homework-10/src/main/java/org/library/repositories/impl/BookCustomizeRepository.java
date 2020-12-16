@@ -6,4 +6,6 @@ public interface BookCustomizeRepository<T, ID> {
 
     boolean isAuthorBookAlreadyExist(Book book);
 
+    Book findByName(String name);
+
 }
