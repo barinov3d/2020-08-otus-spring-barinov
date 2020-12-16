@@ -1,4 +1,4 @@
-package org.library.rest;
+package org.library.controllers.rest;
 
 import org.library.models.Book;
 import org.library.models.Comment;

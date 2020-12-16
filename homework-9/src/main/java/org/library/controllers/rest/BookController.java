@@ -1,4 +1,4 @@
-package org.library.rest;
+package org.library.controllers.rest;
 
 import org.library.exceptions.AuthorNotFoundException;
 import org.library.exceptions.GenreNotFoundException;

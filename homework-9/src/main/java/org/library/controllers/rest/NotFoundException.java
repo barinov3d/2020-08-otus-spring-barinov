@@ -1,4 +1,4 @@
-package org.library.rest;
+package org.library.controllers.rest;
 
 class NotFoundException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package org.library.page;
+package org.library.controllers;
 
 import org.library.models.Author;
 import org.library.repositories.AuthorRepository;
