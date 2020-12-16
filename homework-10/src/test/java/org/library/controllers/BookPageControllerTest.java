@@ -3,7 +3,6 @@ package org.library.controllers;
 import javassist.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.library.controllers.BookPageController;
 import org.library.models.Book;
 import org.library.services.AuthorService;
 import org.library.services.BookService;
@@ -59,14 +58,15 @@ public class BookPageControllerTest {
                 .andExpect(model().attributeExists("book"));
     }
 
-   /* @Test
+/*
+    @Test
     public void testGetBookNotFound() throws Exception {
 
         when(bookService.findById(anyString())).thenThrow(NotFoundException.class);
 
-        mockMvc.perform(get("/book/1/show"))
+        mockMvc.perform(get("/book/1/"))
                 .andExpect(status().isNotFound())
-                .andExpect(view().name("404error"));
+                .andExpect(view().name("404"));
     }
 
     @Test
@@ -127,6 +127,7 @@ public class BookPageControllerTest {
                 .andExpect(model().attributeExists("book"));
     }
 */
+
     @Test
     public void testDeleteAction() throws Exception {
         mockMvc.perform(get("/book/1/delete"))

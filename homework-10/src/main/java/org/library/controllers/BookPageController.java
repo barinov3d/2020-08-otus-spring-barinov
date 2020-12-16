@@ -1,13 +1,14 @@
 package org.library.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.library.exceptions.GenreNotFoundException;
-import org.library.exceptions.NotFoundException;
+import org.library.exceptions.BookNotFoundException;
+import org.library.exceptions.DuplicateAuthorBookException;
+import org.library.exceptions.DuplicateAuthorNameException;
+import org.library.exceptions.DuplicateGenreNameException;
 import org.library.models.Author;
 import org.library.models.Book;
 import org.library.models.Comment;
 import org.library.models.Genre;
-import org.library.repositories.CommentRepository;
 import org.library.services.AuthorService;
 import org.library.services.BookService;
 import org.library.services.CommentService;
@@ -95,7 +96,7 @@ public class BookPageController {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(BookNotFoundException.class)
     public ModelAndView handleNotFound(Exception exception) {
 
         log.error("Handling not found exception");
@@ -103,7 +104,26 @@ public class BookPageController {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        modelAndView.setViewName("404error");
+        modelAndView.setViewName("404");
+        modelAndView.addObject("exception", exception);
+
+        return modelAndView;
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler({
+            DuplicateAuthorBookException.class,
+            DuplicateGenreNameException.class,
+            DuplicateAuthorNameException.class
+    })
+    public ModelAndView handleDuplicated(Exception exception) {
+
+        log.error("Handling not found exception");
+        log.error(exception.getMessage());
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("409");
         modelAndView.addObject("exception", exception);
 
         return modelAndView;

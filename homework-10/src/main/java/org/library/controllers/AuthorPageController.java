@@ -1,17 +1,19 @@
 package org.library.controllers;
 
+import lombok.extern.slf4j.Slf4j;
+import org.library.exceptions.*;
 import org.library.models.Author;
 import org.library.repositories.AuthorRepository;
 import org.library.services.AuthorService;
 import org.library.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+@Slf4j
 @Controller
 public class AuthorPageController {
     private final BookService bookService;
@@ -56,6 +58,40 @@ public class AuthorPageController {
         Author author = authorService.findById(id);
         model.addAttribute("author", author);
         return "author";
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(AuthorNotFoundException.class)
+    public ModelAndView handleNotFound(Exception exception) {
+
+        log.error("Handling not found exception");
+        log.error(exception.getMessage());
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("404");
+        modelAndView.addObject("exception", exception);
+
+        return modelAndView;
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler({
+            DuplicateAuthorBookException.class,
+            DuplicateGenreNameException.class,
+            DuplicateAuthorNameException.class
+    })
+    public ModelAndView handleDuplicated(Exception exception) {
+
+        log.error("Handling not found exception");
+        log.error(exception.getMessage());
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("409");
+        modelAndView.addObject("exception", exception);
+
+        return modelAndView;
     }
 
 }
