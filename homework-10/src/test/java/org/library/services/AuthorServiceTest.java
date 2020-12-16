@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DataMongoTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class AuthorRepositoryTest {
+class AuthorServiceTest {
 
     private static final String EXISTING_AUTHOR_NAME = "Zed A. Shaw";
     private static final int STARTED_AUTHOR_COUNT = 4;

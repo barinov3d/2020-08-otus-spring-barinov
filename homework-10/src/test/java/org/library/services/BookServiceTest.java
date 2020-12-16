@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataMongoTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class BookRepositoryTest {
+class BookServiceTest {
     private static final long STARTED_BOOKS_COUNT = 3;
     private static final String NEW_BOOK_TITLE = "Thinking in java";
     private static final String NEW_BOOK_GENRE_NAME = "Other";

@@ -1,8 +1,11 @@
-package org.library.repositories;
+package org.library.services;
 
 import org.junit.jupiter.api.*;
 import org.library.exceptions.DuplicateGenreNameException;
 import org.library.models.Genre;
+import org.library.repositories.GenreRepository;
+import org.library.services.GenreService;
+import org.library.services.GenreServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -13,12 +16,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DataMongoTest
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class GenreRepositoryTest {
+class GenreServiceTest {
 
     private static final String EXISTING_GENRE_NAME = "Other";
 
     @Autowired
     private GenreRepository genreRepository;
+
+    private GenreService genreService;
+
+    @BeforeEach
+    public void setUp() {
+        this.genreService = new GenreServiceImpl(genreRepository);
+    }
+
 
     @Test
     void shouldfindAll() {
@@ -27,21 +38,21 @@ class GenreRepositoryTest {
 
     @Test
     void shouldFindById() {
-        Genre genre = genreRepository.save(new Genre("New genre 1"));
-        assertThat(genreRepository.findById(genre.getId()).get()).isEqualTo(genre);
+        Genre genre = genreService.save(new Genre("New genre 1"));
+        assertThat(genreService.findById(genre.getId())).isEqualTo(genre);
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldDeleteById() {
-        Genre genre = genreRepository.save(new Genre("New genre 2"));
-        genreRepository.deleteById(genre.getId());
-        assertThat(genreRepository.findAll()).doesNotContain(genre);
+        Genre genre = genreService.save(new Genre("New genre 2"));
+        genreService.deleteById(genre.getId());
+        assertThat(genreService.findAll()).doesNotContain(genre);
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void shouldNotAddDuplicatedGenreName() {
-        assertThrows(DuplicateGenreNameException.class, () -> genreRepository.save(new Genre(EXISTING_GENRE_NAME)));
+        assertThrows(DuplicateGenreNameException.class, () -> genreService.save(new Genre(EXISTING_GENRE_NAME)));
     }
 }
