@@ -27,13 +27,13 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author findById(String id) {
+    public Author findById(String id) throws AuthorNotFoundException {
         return authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException(String.format("Author with id: %s not found", id)));
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(String id) throws AuthorNotFoundException {
         final Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException(String.format("Author with id: %s not found", id)));
         final List<Book> books = author.getBooks();
@@ -42,14 +42,14 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void delete(Author author) {
+    public void delete(Author author) throws AuthorNotFoundException {
         final List<Book> books = author.getBooks();
         bookRepository.deleteAll(books);
         authorRepository.delete(author);
     }
 
     @Override
-    public Author findByName(String name) {
+    public Author findByName(String name) throws AuthorNotFoundException {
         final Author author = authorRepository.findByName(name);
         if (author == null) {
             throw new AuthorNotFoundException(String.format("Author with name: %s not found", name));
@@ -58,11 +58,22 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author save(Author author) {
+    public Author save(Author author) throws DuplicateAuthorNameException {
         if (author.getId() == null && (authorRepository.findByName(author.getName()) != null)) {
             throw new DuplicateAuthorNameException(
                     "Author with name '" + author.getName() + "' is already define in the scope");
         }
         return authorRepository.save(author);
     }
+
+    @Override
+    public Author findAuthorByBook(Book book) throws AuthorNotFoundException {
+        final Author author = authorRepository.findAuthorByBook(book);
+        if (author == null) {
+            throw new AuthorNotFoundException(String.format("Author with book: %s not found", book.getTitle()));
+        }
+        return author;
+    }
+
+
 }

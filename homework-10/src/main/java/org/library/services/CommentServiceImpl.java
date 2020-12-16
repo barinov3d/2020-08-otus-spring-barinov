@@ -3,10 +3,11 @@ package org.library.services;
 import org.library.exceptions.CommentNotFoundException;
 import org.library.models.Comment;
 import org.library.repositories.CommentRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public class CommentServiceImpl implements CommentService {
 
     final CommentRepository commentRepository;

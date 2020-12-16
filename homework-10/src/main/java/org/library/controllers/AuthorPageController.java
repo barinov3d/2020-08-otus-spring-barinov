@@ -2,6 +2,7 @@ package org.library.controllers;
 
 import org.library.models.Author;
 import org.library.repositories.AuthorRepository;
+import org.library.services.AuthorService;
 import org.library.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,12 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class AuthorPageController {
     private final BookService bookService;
-    private final AuthorRepository authorRepository;
+    private final AuthorService authorService;
 
     @Autowired
-    public AuthorPageController(BookService bookService, AuthorRepository authorRepository) {
+    public AuthorPageController(BookService bookService, AuthorService authorService) {
         this.bookService = bookService;
-        this.authorRepository = authorRepository;
+        this.authorService = authorService;
     }
 
     @GetMapping("/author")
@@ -31,28 +32,28 @@ public class AuthorPageController {
     @PostMapping("/author")
     public String addBook(@ModelAttribute(value = "author") Author author) {
         author.setName(author.getName());
-        authorRepository.save(author);
+        authorService.save(author);
         return "redirect:/";
     }
 
     @PostMapping("/author/{id}/update")
-    public String updateAuthor(@PathVariable("id") String id, @ModelAttribute(value = "author") Author author, Model model) {
-        final Author authorFromRepo = authorRepository.findById(id).orElseThrow();
+    public String updateAuthor(@PathVariable("id") String id, @ModelAttribute(value = "author") Author author) {
+        final Author authorFromRepo = authorService.findById(id);
         authorFromRepo.setName(author.getName());
-        authorRepository.save(authorFromRepo);
+        authorService.save(authorFromRepo);
         return "redirect:/author/{id}";
     }
 
     @GetMapping("/author/{id}/delete")
     public String deleteAuthor(@PathVariable("id") String id) {
-        bookService.deleteAll(bookService.findAllByAuthor(authorRepository.findById(id).orElseThrow()));
-        authorRepository.deleteById(id);
+        bookService.deleteAll(bookService.findAllByAuthor(authorService.findById(id)));
+        authorService.deleteById(id);
         return "redirect:/";
     }
 
     @GetMapping("/author/{id}")
     public String authorPage(@PathVariable("id") String id, Model model) {
-        Author author = authorRepository.findById(id).orElseThrow(RuntimeException::new);
+        Author author = authorService.findById(id);
         model.addAttribute("author", author);
         return "author";
     }

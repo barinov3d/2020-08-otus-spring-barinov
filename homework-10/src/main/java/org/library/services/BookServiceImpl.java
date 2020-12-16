@@ -28,7 +28,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book findByTitle(String name) {
+    public Book findByTitle(String name) throws BookNotFoundException {
         final Book book = bookRepository.findByName(name);
         if (book == null) {
             throw new BookNotFoundException(String.format("Book with name: %s not found", name));
@@ -37,7 +37,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book findById(String id) {
+    public Book findById(String id) throws BookNotFoundException {
         return bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(String.format("Book with id: %s not found", id)));
     }
@@ -58,7 +58,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> findAllByAuthor(Author author) {
+    public List<Book> findAllByAuthor(Author author) throws AuthorNotFoundException {
         final Author authorFromRepo = authorRepository.findByName(author.getName());
         if (authorFromRepo == null) {
             throw new AuthorNotFoundException("Author with name " + author.getName() + " not found");
@@ -67,14 +67,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book findBookByAuthorAndTitle(Author author, String title) {
+    public Book findBookByAuthorAndTitle(Author author, String title) throws BookNotFoundException {
         final List<Book> books = findAllByAuthor(author);
         return books.stream().filter(b -> b.getTitle().equals(title)).findFirst()
                 .orElseThrow(() -> new BookNotFoundException("Book with title " + title + " not found for " + author.getName()));
     }
 
     @Override
-    public Book save(Book book) {
+    public Book save(Book book) throws DuplicateAuthorBookException {
         if (book.getId() == null && bookRepository.isAuthorBookAlreadyExist(book)) {
             throw new DuplicateAuthorBookException(
                     "Book with title '" + book.getTitle() + " and genre '" + book.getGenre() + "' is already define in the scope");

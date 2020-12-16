@@ -13,5 +13,7 @@ public interface GenreService {
 
     Genre findById(String id) throws GenreNotFoundException;
 
+    Genre findByName(String name) throws GenreNotFoundException;
+
     void deleteById(String id) throws GenreNotFoundException;
 }
