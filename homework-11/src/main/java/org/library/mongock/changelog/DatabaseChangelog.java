@@ -3,14 +3,8 @@ package org.library.mongock.changelog;
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
-import org.library.models.Author;
-import org.library.models.Book;
-import org.library.models.Comment;
-import org.library.models.Genre;
-import org.library.repositories.AuthorRepository;
-import org.library.repositories.BookRepository;
-import org.library.repositories.CommentRepository;
-import org.library.repositories.GenreRepository;
+import org.library.models.*;
+import org.library.repositories.*;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -25,8 +19,12 @@ public class DatabaseChangelog {
     }
 
     @ChangeSet(order = "002", id = "insertData", author = "dmitry")
-    public void insertData(AuthorRepository authorRepository, GenreRepository genreRepository,
+    public void insertData(UserRepository userRepository, AuthorRepository authorRepository, GenreRepository genreRepository,
                            BookRepository bookRepository, CommentRepository commentRepository) {
+        //Users
+        userRepository.save(new User("test@test.ru", "123456"));
+        userRepository.save(new User("ya@ya.ru", "123456"));
+        userRepository.save(new User("google@google.com", "123456"));
 
         Genre genre1 = new Genre("Сomputer science");
         Genre genre2 = new Genre("Romance");

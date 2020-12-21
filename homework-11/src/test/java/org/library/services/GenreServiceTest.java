@@ -4,8 +4,6 @@ import org.junit.jupiter.api.*;
 import org.library.exceptions.DuplicateGenreNameException;
 import org.library.models.Genre;
 import org.library.repositories.GenreRepository;
-import org.library.services.GenreService;
-import org.library.services.GenreServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.annotation.DirtiesContext;

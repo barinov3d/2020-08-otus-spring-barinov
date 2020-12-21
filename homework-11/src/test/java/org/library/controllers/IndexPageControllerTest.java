@@ -2,22 +2,17 @@ package org.library.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.library.controllers.IndexPageController;
 import org.library.models.Book;
 import org.library.services.BookService;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
@@ -27,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class IndexPageControllerTest {
-    
+
     @Mock
     BookService bookService;
 
@@ -51,7 +46,7 @@ public class IndexPageControllerTest {
     }
 
     @Test
-    public void getIndexPage(){
+    public void getIndexPage() {
 
         //given
         List<Book> books = new ArrayList<>();

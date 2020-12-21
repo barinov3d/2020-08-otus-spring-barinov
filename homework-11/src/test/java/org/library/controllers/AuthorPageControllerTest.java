@@ -4,11 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.library.exceptions.*;
 import org.library.models.Author;
-import org.library.models.Book;
 import org.library.services.AuthorService;
 import org.library.services.BookService;
-import org.library.services.CommentService;
-import org.library.services.GenreService;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
@@ -55,25 +52,25 @@ public class AuthorPageControllerTest {
 
     @Test
     public void testGetAuthorNotFound() throws Exception {
-        checkViewExceptionPage(new AuthorNotFoundException(""), status().isNotFound(),"404");
+        checkViewExceptionPage(new AuthorNotFoundException(""), status().isNotFound(), "404");
     }
 
     @Test
     public void testDuplicateAuthorBookException() throws Exception {
-        checkViewExceptionPage(new DuplicateAuthorBookException(""), status().isConflict(),"409");
+        checkViewExceptionPage(new DuplicateAuthorBookException(""), status().isConflict(), "409");
     }
 
     @Test
     public void testDuplicateGenreNameException() throws Exception {
-        checkViewExceptionPage(new DuplicateGenreNameException(""), status().isConflict(),"409");
+        checkViewExceptionPage(new DuplicateGenreNameException(""), status().isConflict(), "409");
     }
 
     @Test
     public void testDuplicateAuthorNameException() throws Exception {
-        checkViewExceptionPage(new DuplicateAuthorNameException(""), status().isConflict(),"409");
+        checkViewExceptionPage(new DuplicateAuthorNameException(""), status().isConflict(), "409");
     }
 
-    private void checkViewExceptionPage(RepositoryException e,ResultMatcher resultMatcher ,String view) throws Exception {
+    private void checkViewExceptionPage(RepositoryException e, ResultMatcher resultMatcher, String view) throws Exception {
         when(authorService.findById(anyString())).thenThrow(e);
         mockMvc.perform(get("/author/1/"))
                 .andExpect(resultMatcher)

@@ -1,28 +1,22 @@
 package org.library.controllers;
 
-import javassist.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.library.exceptions.*;
-import org.library.models.Author;
 import org.library.models.Book;
-import org.library.models.Genre;
 import org.library.services.AuthorService;
 import org.library.services.BookService;
 import org.library.services.CommentService;
 import org.library.services.GenreService;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class BookPageControllerTest {
@@ -64,25 +58,25 @@ public class BookPageControllerTest {
 
     @Test
     public void testGetBookNotFound() throws Exception {
-        checkViewExceptionPage(new BookNotFoundException(""), status().isNotFound(),"404");
+        checkViewExceptionPage(new BookNotFoundException(""), status().isNotFound(), "404");
     }
 
     @Test
     public void testDuplicateAuthorBookException() throws Exception {
-        checkViewExceptionPage(new DuplicateAuthorBookException(""), status().isConflict(),"409");
+        checkViewExceptionPage(new DuplicateAuthorBookException(""), status().isConflict(), "409");
     }
 
     @Test
     public void testDuplicateGenreNameException() throws Exception {
-        checkViewExceptionPage(new DuplicateGenreNameException(""), status().isConflict(),"409");
+        checkViewExceptionPage(new DuplicateGenreNameException(""), status().isConflict(), "409");
     }
 
     @Test
     public void testDuplicateAuthorNameException() throws Exception {
-        checkViewExceptionPage(new DuplicateAuthorNameException(""), status().isConflict(),"409");
+        checkViewExceptionPage(new DuplicateAuthorNameException(""), status().isConflict(), "409");
     }
 
-    private void checkViewExceptionPage(RepositoryException e,ResultMatcher resultMatcher ,String view) throws Exception {
+    private void checkViewExceptionPage(RepositoryException e, ResultMatcher resultMatcher, String view) throws Exception {
         when(bookService.findById(anyString())).thenThrow(e);
         mockMvc.perform(get("/book/1/"))
                 .andExpect(resultMatcher)
