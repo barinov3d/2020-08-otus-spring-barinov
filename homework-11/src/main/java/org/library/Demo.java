@@ -8,7 +8,9 @@ import org.library.repositories.GenreRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableMongoRepositories(basePackages = "org.library.repositories")
 @EnableMongock
@@ -38,6 +40,11 @@ public class Demo {
         CommentRepository commentRepository = context.getBean(CommentRepository.class);
         commentRepository.findAll().forEach(System.out::println);
         System.out.println("\n\n----------------------------------------------");
+    }
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

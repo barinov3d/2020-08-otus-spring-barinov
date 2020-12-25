@@ -5,6 +5,7 @@ import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
 import org.library.models.*;
 import org.library.repositories.*;
+import org.library.services.UserService;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -20,11 +21,11 @@ public class DatabaseChangelog {
 
     @ChangeSet(order = "002", id = "insertData", author = "dmitry")
     public void insertData(UserRepository userRepository, AuthorRepository authorRepository, GenreRepository genreRepository,
-                           BookRepository bookRepository, CommentRepository commentRepository) {
+                           BookRepository bookRepository, CommentRepository commentRepository, UserService userService) {
         //Users
-        userRepository.save(new User("test@test.ru", "123456"));
-        userRepository.save(new User("ya@ya.ru", "123456"));
-        userRepository.save(new User("google@google.com", "123456"));
+        userRepository.save(userService.createUser(new User("test@test.ru", "123456", null, null)));
+        userRepository.save(userService.createUser(new User("ya@ya.ru", "123456", null, null)));
+        userRepository.save(userService.createUser(new User("google@google.com", "123456", null, null)));
 
         Genre genre1 = new Genre("Сomputer science");
         Genre genre2 = new Genre("Romance");

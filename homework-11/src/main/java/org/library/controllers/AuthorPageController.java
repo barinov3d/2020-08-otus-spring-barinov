@@ -1,5 +1,6 @@
 package org.library.controllers;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.library.exceptions.AuthorNotFoundException;
 import org.library.exceptions.DuplicateAuthorBookException;
@@ -17,15 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @Controller
+@AllArgsConstructor(onConstructor = @____(@Autowired))
 public class AuthorPageController {
     private final BookService bookService;
     private final AuthorService authorService;
-
-    @Autowired
-    public AuthorPageController(BookService bookService, AuthorService authorService) {
-        this.bookService = bookService;
-        this.authorService = authorService;
-    }
 
     @GetMapping("/author")
     public String newAuthorPage(Model model) {

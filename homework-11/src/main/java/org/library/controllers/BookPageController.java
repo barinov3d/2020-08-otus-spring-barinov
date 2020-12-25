@@ -1,5 +1,6 @@
 package org.library.controllers;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.library.exceptions.BookNotFoundException;
 import org.library.exceptions.DuplicateAuthorBookException;
@@ -25,19 +26,13 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@AllArgsConstructor(onConstructor = @____(@Autowired))
 public class BookPageController {
+
     private final BookService bookService;
     private final AuthorService authorService;
     private final GenreService genreService;
     private final CommentService commentService;
-
-    @Autowired
-    public BookPageController(BookService bookService, AuthorService authorService, GenreService genreService, CommentService commentService) {
-        this.bookService = bookService;
-        this.authorService = authorService;
-        this.genreService = genreService;
-        this.commentService = commentService;
-    }
 
     @GetMapping("/book/{id}")
     public String getBook(@PathVariable("id") String id, Model model) {
