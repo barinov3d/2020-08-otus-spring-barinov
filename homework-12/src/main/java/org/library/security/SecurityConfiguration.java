@@ -23,7 +23,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers("/login").anonymous()
                 .and()
+                .authorizeRequests().antMatchers("/author/*/update").hasAnyAuthority( "ROLE_MANAGER","ROLE_ADMIN" )
+                .and()
+                .authorizeRequests().antMatchers("/book/*/update").hasAnyAuthority( "ROLE_MANAGER","ROLE_ADMIN" )
+                .and()
+                .authorizeRequests().antMatchers("/author/*/delete").hasAuthority( "ROLE_ADMIN" )
+                .and()
+                .authorizeRequests().antMatchers("/book/*/delete").hasAuthority( "ROLE_ADMIN" )
+                .and()
                 .formLogin();
+
     }
 
     @Autowired

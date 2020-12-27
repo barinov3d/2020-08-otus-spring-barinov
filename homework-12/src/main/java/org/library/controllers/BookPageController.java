@@ -107,7 +107,7 @@ public class BookPageController {
         bookFromRepo.setTitle(book.getTitle());
         bookFromRepo.setGenre(genreService.findByName(book.getGenre().getName()));
         bookService.save(bookFromRepo);
-        return "redirect:/book/{id}/";
+        return "redirect:/book/{id}";
     }
 
     @PostMapping("/book/{id}/comment/")

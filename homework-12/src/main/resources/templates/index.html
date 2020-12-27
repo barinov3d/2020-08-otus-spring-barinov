@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8"/>
     <title>List of all books</title>
@@ -24,6 +23,7 @@
     </style>
 </head>
 <body>
+<div sec:authorize="hasRole('ADMIN')">ONLY ADMIN CAN SEE ME!</div>
 <div class='main-col'>
     <div>
         <h1>All books list:</h1>
@@ -54,6 +54,9 @@
         <table>
             <tr>
                 <td>Signed in as <b th:text="${#authentication.getPrincipal().getUsername()}">username</b></td>
+            </tr>
+            <tr>
+                <td><b th:text="${#authentication.getPrincipal().getAuthorities()}">authorities</b></td>
             </tr>
             <tr align="right">
                 <td>
