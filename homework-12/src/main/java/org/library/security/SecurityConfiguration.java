@@ -12,6 +12,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserService usersService;
 
+
     public SecurityConfiguration(UserService usersService) {
         this.usersService = usersService;
     }
@@ -19,17 +20,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/**").authenticated()
-                .and()
                 .authorizeRequests().antMatchers("/login").anonymous()
                 .and()
-                .authorizeRequests().antMatchers("/author/*/update").hasAnyAuthority( "ROLE_MANAGER","ROLE_ADMIN" )
+                .authorizeRequests().antMatchers("/**/update").hasAnyRole("MANAGER", "ADMIN")
                 .and()
-                .authorizeRequests().antMatchers("/book/*/update").hasAnyAuthority( "ROLE_MANAGER","ROLE_ADMIN" )
+                .authorizeRequests().antMatchers("/**/delete").hasAnyRole("ADMIN")
                 .and()
-                .authorizeRequests().antMatchers("/author/*/delete").hasAuthority( "ROLE_ADMIN" )
-                .and()
-                .authorizeRequests().antMatchers("/book/*/delete").hasAuthority( "ROLE_ADMIN" )
+                .authorizeRequests().anyRequest().authenticated()
                 .and()
                 .formLogin();
 

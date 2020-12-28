@@ -24,8 +24,8 @@ public class DatabaseChangelog {
                            BookRepository bookRepository, CommentRepository commentRepository, UserService userService) {
         //Users
         userRepository.save(userService.createUser(new User("user@ya.ru", "123456", null, null, "USER")));
-        userRepository.save(userService.createUser(new User("manager@ya.ru", "123456", null, null,"MANAGER")));
-        userRepository.save(userService.createUser(new User("admin@ya.ru", "123456", null, null,"ADMIN")));
+        userRepository.save(userService.createUser(new User("manager@ya.ru", "123456", null, null, "MANAGER")));
+        userRepository.save(userService.createUser(new User("admin@ya.ru", "123456", null, null, "ADMIN")));
 
         Genre genre1 = new Genre("Сomputer science");
         Genre genre2 = new Genre("Romance");

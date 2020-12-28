@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>Edit author</title>
@@ -24,7 +25,8 @@
 </head>
 <body>
 
-<form action="#" method="get" th:action="@{/author/{id}/delete(id=${author.id})}" th:object="${author}">
+<form action="#" method="get" sec:authorize="hasRole('ADMIN')" th:action="@{/author/{id}/delete(id=${author.id})}"
+      th:object="${author}">
     <div class="row">
         <button onclick="location.href='/'" type="submit">Delete author and all his books..</button>
     </div>
@@ -60,7 +62,7 @@
 
     <div class="row">
         <button onclick="location.href='/'" type="button">Back to book list</button>
-        <button type="submit">Save</button>
+        <button sec:authorize="hasAnyRole('ADMIN','MANAGER')" type="submit">Save</button>
     </div>
 </form>
 

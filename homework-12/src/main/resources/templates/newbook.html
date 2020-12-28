@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>Edit book</title>
@@ -22,7 +23,7 @@
         }
     </style>
 </head>
-<body>
+<body sec:authorize="hasAnyRole('ADMIN','MANAGER')">
 
 <!-- Book edition -->
 <form action="newbook.html" id="edit-form" method="post" th:action="@{/book}">

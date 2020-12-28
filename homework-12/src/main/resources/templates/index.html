@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <title>List of all books</title>
@@ -23,15 +24,14 @@
     </style>
 </head>
 <body>
-<div sec:authorize="hasRole('ADMIN')">ONLY ADMIN CAN SEE ME!</div>
 <div class='main-col'>
     <div>
         <h1>All books list:</h1>
-        <div class="row">
+        <div class="row" sec:authorize="hasAnyRole('ADMIN','MANAGER')">
             <button onclick="location.href='/book'" type="submit">Add new book..</button>
         </div>
         <br>
-        <div class="row">
+        <div class="row" sec:authorize="hasAnyRole('ADMIN','MANAGER')">
             <button onclick="location.href='/author'" type="submit">Add new author..</button>
         </div>
         <br>
