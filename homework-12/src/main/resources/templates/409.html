@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>404 Not Found Error</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+    <script src="/webjars/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h1>409 Conflict</h1>
+            <p th:text="${exception.getMessage()}"></p>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <button onclick="location.href='/'" type="button">Back to book list</button>
+</div>
+
+</body>
+</html>
