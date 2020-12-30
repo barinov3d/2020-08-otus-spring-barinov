@@ -42,9 +42,4 @@ public class Demo {
         System.out.println("\n\n----------------------------------------------");
     }
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 }
