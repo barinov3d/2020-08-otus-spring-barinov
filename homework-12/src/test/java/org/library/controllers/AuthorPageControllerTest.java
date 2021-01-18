@@ -8,6 +8,7 @@ import org.library.services.AuthorService;
 import org.library.services.BookService;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -85,4 +86,29 @@ public class AuthorPageControllerTest {
 
         verify(authorService, times(1)).deleteById(anyString());
     }
+
+    @WithMockUser(
+            username = "admin",
+            authorities = {"ROLE_ADMIN"}
+    )
+    @Test
+    public void testAdminRoleDeleteActionSucceed() throws Exception {
+        mockMvc.perform(get("/author/1/delete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
+
+        verify(authorService, times(1)).deleteById(anyString());
+    }
+
+    //TODO
+/*    @WithMockUser(
+            username = "manager",
+            authorities = {"ROLE_MANAGER"}
+    )
+    @Test
+    public void testManagerRoleDeleteActionFailed() throws Exception {
+        mockMvc.perform(get("/author/1/delete"))
+                .andExpect(status().is4xxClientError());
+        verify(authorService, times(0)).deleteById(anyString());
+    }*/
 }

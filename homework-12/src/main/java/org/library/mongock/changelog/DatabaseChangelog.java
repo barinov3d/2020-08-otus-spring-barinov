@@ -6,6 +6,9 @@ import com.mongodb.client.MongoDatabase;
 import org.library.models.*;
 import org.library.repositories.*;
 import org.library.services.UserService;
+import org.library.services.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -21,8 +24,9 @@ public class DatabaseChangelog {
 
     @ChangeSet(order = "002", id = "insertData", author = "dmitry")
     public void insertData(UserRepository userRepository, AuthorRepository authorRepository, GenreRepository genreRepository,
-                           BookRepository bookRepository, CommentRepository commentRepository, UserService userService) {
+                           BookRepository bookRepository, CommentRepository commentRepository) {
         //Users
+        UserService userService = new UserServiceImpl(userRepository, new BCryptPasswordEncoder());
         userRepository.save(userService.createUser(new User("user@ya.ru", "123456", null, null, "USER")));
         userRepository.save(userService.createUser(new User("manager@ya.ru", "123456", null, null, "MANAGER")));
         userRepository.save(userService.createUser(new User("admin@ya.ru", "123456", null, null, "ADMIN")));
