@@ -17,7 +17,6 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
-    Environment environment;
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
