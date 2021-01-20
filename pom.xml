@@ -21,6 +21,7 @@
         <module>homework-10</module>
         <module>homework-11</module>
         <module>homework-12</module>
+        <module>homework-13-docker</module>
     </modules>
 
     <properties>

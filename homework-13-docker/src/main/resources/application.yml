@@ -1,0 +1,14 @@
+logging:
+  level:
+    root: info
+spring:
+  data:
+    mongodb:
+      host: mongodb
+      database: library
+      port: 27017
+mongock:
+  #runner-type: "ApplicationRunner" # default
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - org.library.mongock.changelog
