@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    depends_on:
+      - mongodb
     privileged: true
     image: my-library:1.0
     ports:
