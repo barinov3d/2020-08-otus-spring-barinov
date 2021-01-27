@@ -22,6 +22,7 @@
         <module>homework-11</module>
         <module>homework-12</module>
         <module>homework-13-docker</module>
+        <module>homework-14-actuator</module>
     </modules>
 
     <properties>

@@ -7,7 +7,6 @@ import org.library.models.*;
 import org.library.repositories.*;
 import org.library.services.UserService;
 import org.library.services.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
