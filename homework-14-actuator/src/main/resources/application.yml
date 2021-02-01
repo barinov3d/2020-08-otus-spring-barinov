@@ -1,0 +1,29 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details:
+        always
+  health:
+    custom-health:
+      enabled: true
+logging:
+  level:
+    root: info
+spring:
+  data:
+    mongodb:
+      host: localhost
+      database: library
+      port: 27017
+    rest:
+      basePath: /datarest
+mongock:
+  #runner-type: "ApplicationRunner" # default
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - org.library.mongock.changelog
+
