@@ -1,0 +1,26 @@
+Spring:
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+  data:
+    mongodb:
+      database: mybatch
+      host: localhost
+      port: 27017
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mybatch?serverTimezone=Europe/Moscow&createDatabaseIfNotExist=true&useSSL=false
+    username: root
+    password: root
+    schema: classpath:schema.sql
+    initialization-mode: always
+  batch:
+    job:
+      enabled: false
+    initialize-schema: always
+
+mongock:
+  runner-type: InitializingBean
+  change-logs-scan-package:
+    - org.springbatch.chandgelogs
