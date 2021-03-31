@@ -7,3 +7,4 @@ mongock:
   runner-type: "InitializingBean"
   change-logs-scan-package:
     - org.webflux.changelogs
+Changes to revert #1
