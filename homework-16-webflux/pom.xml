@@ -11,7 +11,7 @@
     </parent>
     <groupId>org.example</groupId>
     <artifactId>homework-16-webflux</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2</version>
     <name>homework-16-webflux</name>
     <description>homework-16-webflux</description>
 
