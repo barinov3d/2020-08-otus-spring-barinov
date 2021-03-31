@@ -63,7 +63,7 @@ class CourseRepositoryTest {
     }
 
 
-/*    @Test
+    @Test
     void shouldFindCorrectCourseById() {
         Mono<Course> monoCourse = repository.findById("1");
 
@@ -72,7 +72,5 @@ class CourseRepositoryTest {
                 .expectComplete()
                 .verify();
 
-    }*/
+    }
 }
-
-//Changes to revert #2
